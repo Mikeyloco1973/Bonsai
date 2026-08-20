@@ -1,0 +1,288 @@
+<!doctype html>
+
+<html lang="es">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <title>Mi perfil | Bonsai</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+</head>
+
+
+<body class="pagina-perfil">
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header class="perfil-header">
+
+  <a
+    href="index.html"
+    class="perfil-logo"
+  >
+    Bonsai
+  </a>
+
+
+  <nav class="perfil-nav">
+
+    <a href="index.html">
+      Inicio
+    </a>
+
+    <a href="agenda.html">
+      Agendar
+    </a>
+
+    <a href="mis-reservas.html">
+      Mis reservas
+    </a>
+
+  </nav>
+
+
+  <button
+    type="button"
+    class="perfil-cerrar-sesion"
+    id="btnCerrarSesion"
+  >
+    Cerrar sesión
+  </button>
+
+</header>
+
+
+<!-- ==================================================
+     CONTENIDO
+================================================== -->
+
+<main class="perfil-main">
+
+  <section class="perfil-contenedor">
+
+
+    <!-- ==========================================
+         PRESENTACIÓN
+    ========================================== -->
+
+    <div class="perfil-intro">
+
+      <p class="perfil-etiqueta">
+        MI CUENTA
+      </p>
+
+      <h1>
+        Mi perfil
+      </h1>
+
+      <p>
+        Mantén tus datos actualizados para que
+        Javii pueda contactarte correctamente
+        cuando sea necesario.
+      </p>
+
+    </div>
+
+
+    <!-- ==========================================
+         TARJETA
+    ========================================== -->
+
+    <div class="perfil-card">
+
+
+      <div class="perfil-avatar" id="perfilAvatar">
+        B
+      </div>
+
+
+      <div class="perfil-card-titulo">
+
+        <h2 id="perfilNombreTitulo">
+          Cargando...
+        </h2>
+
+        <span>
+                    Clienta Bonsai
+                </span>
+
+      </div>
+
+
+      <p
+        class="perfil-cargando"
+        id="perfilCargando"
+      >
+        Cargando tus datos...
+      </p>
+
+
+      <!-- ==========================================
+           FORMULARIO
+      ========================================== -->
+
+      <form
+        class="perfil-form oculto"
+        id="formPerfil"
+      >
+
+
+        <div class="perfil-form-grid">
+
+
+          <!-- NOMBRE -->
+
+          <div class="campo-formulario">
+
+            <label for="perfilNombre">
+              Nombre
+            </label>
+
+            <input
+              type="text"
+              id="perfilNombre"
+              autocomplete="given-name"
+              maxlength="50"
+              required
+            >
+
+          </div>
+
+
+          <!-- APELLIDO -->
+
+          <div class="campo-formulario">
+
+            <label for="perfilApellido">
+              Apellido
+            </label>
+
+            <input
+              type="text"
+              id="perfilApellido"
+              autocomplete="family-name"
+              maxlength="50"
+              required
+            >
+
+          </div>
+
+
+          <!-- TELÉFONO -->
+
+          <div class="campo-formulario perfil-campo-completo">
+
+            <label for="perfilTelefono">
+              WhatsApp
+            </label>
+
+            <input
+              type="tel"
+              id="perfilTelefono"
+              autocomplete="tel"
+              placeholder="+56 9 1234 5678"
+              required
+            >
+
+            <small>
+              Este número será utilizado por Javii
+              para contactarte por tus reservas.
+            </small>
+
+          </div>
+
+
+          <!-- CORREO -->
+
+          <div class="campo-formulario perfil-campo-completo">
+
+            <label for="perfilCorreo">
+              Correo electrónico
+            </label>
+
+            <input
+              type="email"
+              id="perfilCorreo"
+              disabled
+            >
+
+            <small>
+              El correo de inicio de sesión no se
+              modifica desde esta pantalla.
+            </small>
+
+          </div>
+
+
+        </div>
+
+
+        <!-- ==========================================
+             MENSAJE
+        ========================================== -->
+
+        <div
+          class="perfil-mensaje oculto"
+          id="perfilMensaje"
+        >
+        </div>
+
+
+        <!-- ==========================================
+             BOTÓN
+        ========================================== -->
+
+        <button
+          type="submit"
+          class="perfil-guardar"
+          id="btnGuardarPerfil"
+        >
+          Guardar cambios
+        </button>
+
+
+      </form>
+
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer class="perfil-footer">
+
+  <p>
+    Bonsai · Javii
+  </p>
+
+</footer>
+
+
+<script
+  type="module"
+  src="js/perfil.js"
+></script>
+
+</body>
+
+</html>

@@ -854,7 +854,7 @@
       id="seccionServicios"
     >
 
-      <div class="admin-titulo-seccion">
+      <div class="admin-titulo-seccion admin-titulo-con-accion">
 
         <div>
 
@@ -867,11 +867,20 @@
           </h2>
 
           <p>
-            Modifica el precio, duración y disponibilidad de los
-            servicios que pueden reservar las clientas.
+            Modifica los servicios existentes o agrega
+            nuevos servicios para las reservas.
           </p>
 
         </div>
+
+
+        <button
+          type="button"
+          class="btn-agregar-servicio"
+          id="btnAgregarServicio"
+        >
+          + Agregar servicio
+        </button>
 
       </div>
 
@@ -1438,6 +1447,279 @@
         id="btnNotificarCancelacionWhatsApp"
       >
         Notificar por WhatsApp
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     MODAL NUEVO SERVICIO
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalNuevoServicio"
+>
+
+  <div class="modal-bonsai modal-nuevo-servicio">
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarModalNuevoServicio"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      NUEVO SERVICIO
+    </p>
+
+
+    <h2>
+      Agregar servicio
+    </h2>
+
+
+    <p class="nuevo-servicio-descripcion">
+      Completa la información del nuevo servicio.
+    </p>
+
+
+    <form id="formNuevoServicio">
+
+
+      <div class="nuevo-servicio-grid">
+
+
+        <!-- NOMBRE -->
+
+        <div class="campo-formulario">
+
+          <label for="nuevoServicioNombre">
+            Nombre
+          </label>
+
+          <input
+            type="text"
+            id="nuevoServicioNombre"
+            maxlength="60"
+            required
+          >
+
+        </div>
+
+
+        <!-- PRECIO -->
+
+        <div class="campo-formulario">
+
+          <label for="nuevoServicioPrecio">
+            Precio
+          </label>
+
+          <input
+            type="number"
+            id="nuevoServicioPrecio"
+            min="0"
+            step="1000"
+            required
+          >
+
+        </div>
+
+
+        <!-- DURACIÓN -->
+
+        <div class="campo-formulario nuevo-servicio-completo">
+
+          <label for="nuevoServicioDuracion">
+            Duración
+          </label>
+
+          <select
+            id="nuevoServicioDuracion"
+            class="servicio-select"
+            required
+          >
+          </select>
+
+        </div>
+
+
+        <!-- PRECIO DESDE -->
+
+        <label class="servicio-check nuevo-servicio-completo">
+
+          <input
+            type="checkbox"
+            id="nuevoServicioDesde"
+          >
+
+          <span>
+                        Mostrar precio como "Desde"
+                    </span>
+
+        </label>
+
+
+        <!-- DISPONIBLE -->
+
+        <label class="servicio-check nuevo-servicio-completo">
+
+          <input
+            type="checkbox"
+            id="nuevoServicioActivo"
+            checked
+          >
+
+          <span>
+                        Servicio disponible para reservas
+                    </span>
+
+        </label>
+
+
+      </div>
+
+
+      <div class="modal-acciones">
+
+        <button
+          type="button"
+          class="btn-modal-volver"
+          id="cancelarNuevoServicio"
+        >
+          Cancelar
+        </button>
+
+
+        <button
+          type="submit"
+          class="btn-guardar-nuevo-servicio"
+          id="guardarNuevoServicio"
+        >
+          Agregar servicio
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     DETALLE RESERVA DESDE AGENDA
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalDetalleAgenda"
+>
+
+  <div class="modal-bonsai modal-detalle-agenda">
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarDetalleAgenda"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      DETALLE DE LA RESERVA
+    </p>
+
+
+    <h2 id="detalleAgendaCliente">
+      Clienta
+    </h2>
+
+
+    <!-- CLIENTE -->
+
+    <div class="detalle-agenda-seccion">
+
+      <h3>
+        Información de la clienta
+      </h3>
+
+
+      <div
+        class="detalle-agenda-datos"
+        id="detalleAgendaDatosCliente"
+      >
+      </div>
+
+    </div>
+
+
+    <!-- RESERVA -->
+
+    <div class="detalle-agenda-seccion">
+
+      <h3>
+        Información de la reserva
+      </h3>
+
+
+      <div
+        class="detalle-agenda-datos"
+        id="detalleAgendaDatosReserva"
+      >
+      </div>
+
+    </div>
+
+
+    <!-- MENSAJE -->
+
+    <div class="campo-formulario detalle-agenda-mensaje">
+
+      <label for="mensajeContactoAgenda">
+        Mensaje para WhatsApp
+      </label>
+
+      <textarea
+        id="mensajeContactoAgenda"
+        rows="5"
+        placeholder="Escribe el mensaje para la clienta..."
+      ></textarea>
+
+      <small>
+        Puedes modificar el mensaje antes de abrir WhatsApp.
+      </small>
+
+    </div>
+
+
+    <div class="modal-acciones">
+
+      <button
+        type="button"
+        class="btn-modal-volver"
+        id="btnCerrarDetalleAgenda"
+      >
+        Cerrar
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-contactar-agenda"
+        id="btnContactarAgenda"
+      >
+        Contactar por WhatsApp
       </button>
 
     </div>

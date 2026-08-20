@@ -3,10 +3,7 @@
 // AGENDA VISUAL ADMINISTRATIVA
 // ==================================================
 
-import {
-  auth,
-  db
-} from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
 
 import {
   onAuthStateChanged
@@ -26,119 +23,95 @@ import {
 // CONFIGURACIÓN
 // ==================================================
 
-const ESTILISTA_ID =
-  "javiera";
-
-const APERTURA =
-  630; // 10:30
-
-const CIERRE =
-  1260; // 21:00
-
-const INTERVALO =
-  30;
-
-// Altura visual de cada bloque de 30 minutos.
-const ALTO_SLOT =
-  44;
+const ESTILISTA_ID = "javiera";
+const APERTURA = 630;   // 10:30
+const CIERRE = 1260;    // 21:00
+const INTERVALO = 30;
+const ALTO_SLOT = 44;
 
 
 // ==================================================
 // VARIABLES
 // ==================================================
 
-let reservasDia =
-  [];
+let reservasDia = [];
+let bloqueosDia = [];
 
-let bloqueosDia =
-  [];
+let reservasCargadas = false;
+let bloqueosCargados = false;
 
-let reservasCargadas =
-  false;
+let detenerReservas = null;
+let detenerBloqueos = null;
 
-let bloqueosCargados =
-  false;
+const clientesCache = new Map();
+const clientesDatosCache = new Map();
 
-
-let detenerReservas =
-  null;
-
-let detenerBloqueos =
-  null;
-
-
-const clientesCache =
-  new Map();
-
-
-// Evita que una carga antigua sobrescriba
-// una fecha seleccionada posteriormente.
-let versionRender =
-  0;
+let detalleReservaActual = null;
+let versionRender = 0;
 
 
 // ==================================================
-// ELEMENTOS
+// ELEMENTOS DE LA AGENDA
 // ==================================================
 
 const fechaAdmin =
-  document.getElementById(
-    "fechaAdmin"
-  );
-
+  document.getElementById("fechaAdmin");
 
 const agendaVisualTitulo =
-  document.getElementById(
-    "agendaVisualTitulo"
-  );
-
+  document.getElementById("agendaVisualTitulo");
 
 const agendaVisualResumen =
-  document.getElementById(
-    "agendaVisualResumen"
-  );
-
+  document.getElementById("agendaVisualResumen");
 
 const cargandoAgendaVisual =
-  document.getElementById(
-    "cargandoAgendaVisual"
-  );
-
+  document.getElementById("cargandoAgendaVisual");
 
 const agendaVisualDia =
-  document.getElementById(
-    "agendaVisualDia"
-  );
-
+  document.getElementById("agendaVisualDia");
 
 const agendaVisualHoras =
-  document.getElementById(
-    "agendaVisualHoras"
-  );
-
+  document.getElementById("agendaVisualHoras");
 
 const agendaVisualCuerpo =
-  document.getElementById(
-    "agendaVisualCuerpo"
-  );
-
+  document.getElementById("agendaVisualCuerpo");
 
 const agendaVisualLineas =
-  document.getElementById(
-    "agendaVisualLineas"
-  );
-
+  document.getElementById("agendaVisualLineas");
 
 const agendaVisualEventos =
-  document.getElementById(
-    "agendaVisualEventos"
-  );
-
+  document.getElementById("agendaVisualEventos");
 
 const agendaVisualCerrado =
-  document.getElementById(
-    "agendaVisualCerrado"
-  );
+  document.getElementById("agendaVisualCerrado");
+
+
+// ==================================================
+// ELEMENTOS DEL MODAL DE DETALLE
+// ==================================================
+
+const modalDetalleAgenda =
+  document.getElementById("modalDetalleAgenda");
+
+const cerrarDetalleAgenda =
+  document.getElementById("cerrarDetalleAgenda");
+
+const btnCerrarDetalleAgenda =
+  document.getElementById("btnCerrarDetalleAgenda");
+
+const detalleAgendaCliente =
+  document.getElementById("detalleAgendaCliente");
+
+const detalleAgendaDatosCliente =
+  document.getElementById("detalleAgendaDatosCliente");
+
+const detalleAgendaDatosReserva =
+  document.getElementById("detalleAgendaDatosReserva");
+
+const mensajeContactoAgenda =
+  document.getElementById("mensajeContactoAgenda");
+
+const btnContactarAgenda =
+  document.getElementById("btnContactarAgenda");
 
 
 // ==================================================
@@ -150,13 +123,9 @@ onAuthStateChanged(
   async (usuario) => {
 
     if (!usuario) {
-
       detenerEscuchas();
-
       return;
-
     }
-
 
     try {
 
@@ -169,33 +138,20 @@ onAuthStateChanged(
           )
         );
 
-
       if (
         !usuarioDoc.exists()
         ||
-        usuarioDoc.data().rol
-        !== "admin"
+        usuarioDoc.data().rol !== "admin"
       ) {
-
         detenerEscuchas();
-
         return;
-
       }
 
-
-      if (
-        !fechaAdmin.value
-      ) {
-
-        fechaAdmin.value =
-          obtenerFechaHoy();
-
+      if (!fechaAdmin.value) {
+        fechaAdmin.value = obtenerFechaHoy();
       }
-
 
       escucharFechaSeleccionada();
-
 
     } catch (error) {
 
@@ -204,12 +160,9 @@ onAuthStateChanged(
         error
       );
 
-
       cargandoAgendaVisual.textContent =
         "No fue posible cargar la agenda visual.";
-
     }
-
   }
 );
 
@@ -221,116 +174,60 @@ onAuthStateChanged(
 fechaAdmin.addEventListener(
   "change",
   () => {
-
     escucharFechaSeleccionada();
-
   }
 );
 
 
 // ==================================================
-// ESCUCHAR FECHA
+// ESCUCHAR FECHA SELECCIONADA
 // ==================================================
 
 function escucharFechaSeleccionada() {
 
   detenerEscuchas();
 
+  reservasDia = [];
+  bloqueosDia = [];
 
-  reservasDia =
-    [];
+  reservasCargadas = false;
+  bloqueosCargados = false;
 
-  bloqueosDia =
-    [];
-
-  reservasCargadas =
-    false;
-
-  bloqueosCargados =
-    false;
-
-
-  const fecha =
-    fechaAdmin.value;
-
+  const fecha = fechaAdmin.value;
 
   if (!fecha) {
-
     return;
-
   }
-
 
   agendaVisualTitulo.textContent =
     capitalizar(
-      formatearFecha(
-        fecha
-      )
+      formatearFecha(fecha)
     );
 
-
-  agendaVisualResumen.textContent =
-    "";
-
-
+  agendaVisualResumen.textContent = "";
   agendaVisualEventos.replaceChildren();
 
+  // Domingo o lunes.
+  if (!fechaAtencionValida(fecha)) {
 
-  // ==================================================
-  // DOMINGO / LUNES
-  // ==================================================
-
-  if (
-    !fechaAtencionValida(
-      fecha
-    )
-  ) {
-
-    cargandoAgendaVisual.classList.add(
-      "oculto"
-    );
-
-
-    agendaVisualDia.classList.add(
-      "oculto"
-    );
-
-
-    agendaVisualCerrado.classList.remove(
-      "oculto"
-    );
-
+    cargandoAgendaVisual.classList.add("oculto");
+    agendaVisualDia.classList.add("oculto");
+    agendaVisualCerrado.classList.remove("oculto");
 
     agendaVisualResumen.textContent =
       "Día cerrado";
 
-
     return;
-
   }
 
+  agendaVisualCerrado.classList.add("oculto");
+  agendaVisualDia.classList.add("oculto");
 
-  agendaVisualCerrado.classList.add(
-    "oculto"
-  );
-
-
-  agendaVisualDia.classList.add(
-    "oculto"
-  );
-
-
-  cargandoAgendaVisual.classList.remove(
-    "oculto"
-  );
-
-
+  cargandoAgendaVisual.classList.remove("oculto");
   cargandoAgendaVisual.textContent =
     "Cargando agenda...";
 
-
   construirEscalaVisual();
-
 
   // ==================================================
   // RESERVAS EN TIEMPO REAL
@@ -339,22 +236,12 @@ function escucharFechaSeleccionada() {
   detenerReservas =
     onSnapshot(
       query(
-        collection(
-          db,
-          "reservas"
-        ),
-        where(
-          "fecha",
-          "==",
-          fecha
-        )
+        collection(db, "reservas"),
+        where("fecha", "==", fecha)
       ),
-
       (resultado) => {
 
-        reservasDia =
-          [];
-
+        reservasDia = [];
 
         resultado.forEach(
           (documento) => {
@@ -362,67 +249,37 @@ function escucharFechaSeleccionada() {
             const datos =
               documento.data();
 
-
             if (
-              datos.estilistaId
-              !== ESTILISTA_ID
+              datos.estilistaId !== ESTILISTA_ID
             ) {
-
               return;
-
             }
 
-
             if (
-              datos.estado
-              === "cancelada_admin"
-
+              datos.estado === "cancelada_admin"
               ||
-
-              datos.estado
-              === "cancelada_cliente"
+              datos.estado === "cancelada_cliente"
             ) {
-
               return;
-
             }
-
 
             reservasDia.push({
-
-              id:
-              documento.id,
-
+              id: documento.id,
               ...datos
-
             });
-
           }
         );
 
-
         reservasDia.sort(
           (a, b) =>
-            Number(
-              a.inicioMinutos
-              || 0
-            )
+            Number(a.inicioMinutos || 0)
             -
-            Number(
-              b.inicioMinutos
-              || 0
-            )
+            Number(b.inicioMinutos || 0)
         );
 
-
-        reservasCargadas =
-          true;
-
-
+        reservasCargadas = true;
         intentarRenderizar();
-
       },
-
       (error) => {
 
         console.error(
@@ -430,13 +287,10 @@ function escucharFechaSeleccionada() {
           error
         );
 
-
         cargandoAgendaVisual.textContent =
           "No fue posible cargar las reservas.";
-
       }
     );
-
 
   // ==================================================
   // BLOQUEOS EN TIEMPO REAL
@@ -445,22 +299,12 @@ function escucharFechaSeleccionada() {
   detenerBloqueos =
     onSnapshot(
       query(
-        collection(
-          db,
-          "bloqueos"
-        ),
-        where(
-          "fecha",
-          "==",
-          fecha
-        )
+        collection(db, "bloqueos"),
+        where("fecha", "==", fecha)
       ),
-
       (resultado) => {
 
-        bloqueosDia =
-          [];
-
+        bloqueosDia = [];
 
         resultado.forEach(
           (documento) => {
@@ -468,52 +312,29 @@ function escucharFechaSeleccionada() {
             const datos =
               documento.data();
 
-
             if (
-              datos.estilistaId
-              !== ESTILISTA_ID
+              datos.estilistaId !== ESTILISTA_ID
             ) {
-
               return;
-
             }
 
-
             bloqueosDia.push({
-
-              id:
-              documento.id,
-
+              id: documento.id,
               ...datos
-
             });
-
           }
         );
 
-
         bloqueosDia.sort(
           (a, b) =>
-            Number(
-              a.inicioMinutos
-              || APERTURA
-            )
+            Number(a.inicioMinutos || APERTURA)
             -
-            Number(
-              b.inicioMinutos
-              || APERTURA
-            )
+            Number(b.inicioMinutos || APERTURA)
         );
 
-
-        bloqueosCargados =
-          true;
-
-
+        bloqueosCargados = true;
         intentarRenderizar();
-
       },
-
       (error) => {
 
         console.error(
@@ -521,13 +342,10 @@ function escucharFechaSeleccionada() {
           error
         );
 
-
         cargandoAgendaVisual.textContent =
           "No fue posible cargar los bloqueos.";
-
       }
     );
-
 }
 
 
@@ -542,14 +360,10 @@ function intentarRenderizar() {
     ||
     !bloqueosCargados
   ) {
-
     return;
-
   }
 
-
   renderizarAgendaVisual();
-
 }
 
 
@@ -560,119 +374,69 @@ function intentarRenderizar() {
 function construirEscalaVisual() {
 
   agendaVisualHoras.replaceChildren();
-
   agendaVisualLineas.replaceChildren();
 
-
   const totalSlots =
-    (CIERRE - APERTURA)
-    /
-    INTERVALO;
-
+    (CIERRE - APERTURA) / INTERVALO;
 
   const altoTotal =
-    totalSlots
-    *
-    ALTO_SLOT;
-
+    totalSlots * ALTO_SLOT;
 
   agendaVisualHoras.style.height =
     `${altoTotal}px`;
 
-
   agendaVisualCuerpo.style.height =
     `${altoTotal}px`;
 
-
   for (
     let indice = 0;
-
     indice <= totalSlots;
-
     indice++
   ) {
 
     const minuto =
       APERTURA
       +
-      indice
-      *
-      INTERVALO;
-
+      indice * INTERVALO;
 
     const posicion =
-      indice
-      *
-      ALTO_SLOT;
+      indice * ALTO_SLOT;
 
-
-    // ==========================================
-    // TEXTO HORA
-    // ==========================================
-
+    // Hora.
     const hora =
-      document.createElement(
-        "span"
-      );
-
+      document.createElement("span");
 
     hora.classList.add(
       "agenda-visual-hora"
     );
 
-
     hora.textContent =
-      minutosAHora(
-        minuto
-      );
-
+      minutosAHora(minuto);
 
     hora.style.top =
       `${posicion}px`;
 
+    agendaVisualHoras.appendChild(hora);
 
-    agendaVisualHoras.appendChild(
-      hora
-    );
-
-
-    // ==========================================
-    // LÍNEA
-    // ==========================================
-
+    // Línea.
     const linea =
-      document.createElement(
-        "div"
-      );
-
+      document.createElement("div");
 
     linea.classList.add(
       "agenda-visual-linea"
     );
 
-
-    // Hora completa un poco más marcada.
-    if (
-      minuto % 60 === 0
-    ) {
-
+    if (minuto % 60 === 0) {
       linea.classList.add(
         "agenda-visual-linea-hora"
       );
-
     }
-
 
     linea.style.top =
       `${posicion}px`;
 
-
-    agendaVisualLineas.appendChild(
-      linea
-    );
-
+    agendaVisualLineas.appendChild(linea);
   }
-
 }
 
 
@@ -685,94 +449,57 @@ async function renderizarAgendaVisual() {
   const miVersion =
     ++versionRender;
 
-
   cargandoAgendaVisual.classList.remove(
     "oculto"
   );
 
-
   cargandoAgendaVisual.textContent =
     "Actualizando agenda...";
 
-
   agendaVisualEventos.replaceChildren();
-
 
   const fechaRender =
     fechaAdmin.value;
 
-
-  // ==================================================
-  // RESERVAS
-  // ==================================================
-
-  for (
-    const reserva
-    of reservasDia
-    ) {
+  // Reservas.
+  for (const reserva of reservasDia) {
 
     const nombreCliente =
       await obtenerNombreCliente(
         reserva.usuarioId
       );
 
-
-    // Si mientras esperábamos cambió la fecha,
-    // abandonamos este render antiguo.
-
     if (
-      miVersion
-      !== versionRender
-
+      miVersion !== versionRender
       ||
-
-      fechaAdmin.value
-      !== fechaRender
+      fechaAdmin.value !== fechaRender
     ) {
-
       return;
-
     }
-
 
     crearEventoReserva(
       reserva,
       nombreCliente
     );
-
   }
 
-
-  // ==================================================
-  // BLOQUEOS
-  // ==================================================
-
+  // Bloqueos.
   bloqueosDia.forEach(
     crearEventoBloqueo
   );
 
-
-  // ==================================================
-  // LÍNEA DE HORA ACTUAL
-  // ==================================================
-
-  agregarLineaHoraActual(
-    fechaRender
-  );
-
+  // Hora actual.
+  agregarLineaHoraActual(fechaRender);
 
   actualizarResumen();
-
 
   cargandoAgendaVisual.classList.add(
     "oculto"
   );
 
-
   agendaVisualDia.classList.remove(
     "oculto"
   );
-
 }
 
 
@@ -786,31 +513,18 @@ function crearEventoReserva(
 ) {
 
   const inicio =
-    Number(
-      reserva.inicioMinutos
-    );
-
+    Number(reserva.inicioMinutos);
 
   const fin =
-    Number(
-      reserva.finMinutos
-    );
-
+    Number(reserva.finMinutos);
 
   if (
-    !Number.isFinite(
-      inicio
-    )
+    !Number.isFinite(inicio)
     ||
-    !Number.isFinite(
-      fin
-    )
+    !Number.isFinite(fin)
   ) {
-
     return;
-
   }
-
 
   const posicion =
     calcularPosicionEvento(
@@ -818,23 +532,14 @@ function crearEventoReserva(
       fin
     );
 
-
   if (!posicion) {
-
     return;
-
   }
 
-
   const evento =
-    document.createElement(
-      "button"
-    );
+    document.createElement("button");
 
-
-  evento.type =
-    "button";
-
+  evento.type = "button";
 
   evento.classList.add(
     "agenda-visual-evento",
@@ -844,74 +549,39 @@ function crearEventoReserva(
     )
   );
 
-
   evento.style.top =
     `${posicion.top}px`;
-
 
   evento.style.height =
     `${posicion.height}px`;
 
-
-  // ==================================================
-  // SERVICIO
-  // ==================================================
-
   const servicio =
-    document.createElement(
-      "strong"
-    );
-
+    document.createElement("strong");
 
   servicio.textContent =
     reserva.servicioNombre
     ||
     "Servicio";
 
-
-  // ==================================================
-  // CLIENTA
-  // ==================================================
-
   const cliente =
-    document.createElement(
-      "span"
-    );
-
+    document.createElement("span");
 
   cliente.textContent =
     nombreCliente;
 
-
-  // ==================================================
-  // HORARIO
-  // ==================================================
-
   const horario =
-    document.createElement(
-      "small"
-    );
-
+    document.createElement("small");
 
   horario.textContent =
     `${reserva.horaInicio} - ${reserva.horaFin}`;
 
-
-  // ==================================================
-  // ESTADO
-  // ==================================================
-
   const estado =
-    document.createElement(
-      "em"
-    );
-
+    document.createElement("em");
 
   estado.textContent =
     obtenerTextoEstado(
       reserva.estado
     );
-
 
   evento.append(
     servicio,
@@ -920,31 +590,25 @@ function crearEventoReserva(
     estado
   );
 
-
   evento.title =
     `${reserva.servicioNombre || "Servicio"} · ${nombreCliente}`;
 
-
   // ==================================================
-  // CLIC → TARJETA DETALLADA
+  // CLIC → ABRIR DETALLE
   // ==================================================
 
   evento.addEventListener(
     "click",
-    () => {
-
-      buscarTarjetaReserva(
-        reserva.id
+    async () => {
+      await abrirDetalleReservaAgenda(
+        reserva
       );
-
     }
   );
-
 
   agendaVisualEventos.appendChild(
     evento
   );
-
 }
 
 
@@ -963,7 +627,6 @@ function crearEventoBloqueo(
         bloqueo.inicioMinutos
       );
 
-
   const fin =
     bloqueo.diaCompleto
       ? CIERRE
@@ -971,85 +634,57 @@ function crearEventoBloqueo(
         bloqueo.finMinutos
       );
 
-
   const posicion =
     calcularPosicionEvento(
       inicio,
       fin
     );
 
-
   if (!posicion) {
-
     return;
-
   }
 
-
   const evento =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   evento.classList.add(
     "agenda-visual-evento",
     "agenda-evento-bloqueo"
   );
 
-
-  if (
-    bloqueo.diaCompleto
-  ) {
-
+  if (bloqueo.diaCompleto) {
     evento.classList.add(
       "agenda-evento-dia-completo"
     );
-
   }
-
 
   evento.style.top =
     `${posicion.top}px`;
 
-
   evento.style.height =
     `${posicion.height}px`;
 
-
   const titulo =
-    document.createElement(
-      "strong"
-    );
-
+    document.createElement("strong");
 
   titulo.textContent =
     bloqueo.diaCompleto
       ? "Día bloqueado"
       : "Horario bloqueado";
 
-
   const motivo =
-    document.createElement(
-      "span"
-    );
-
+    document.createElement("span");
 
   motivo.textContent =
     bloqueo.motivo
     ||
     "Sin motivo";
 
-
   const horario =
-    document.createElement(
-      "small"
-    );
-
+    document.createElement("small");
 
   horario.textContent =
     `${minutosAHora(inicio)} - ${minutosAHora(fin)}`;
-
 
   evento.append(
     titulo,
@@ -1057,11 +692,9 @@ function crearEventoBloqueo(
     horario
   );
 
-
   agendaVisualEventos.appendChild(
     evento
   );
-
 }
 
 
@@ -1080,62 +713,41 @@ function calcularPosicionEvento(
       inicioOriginal
     );
 
-
   const fin =
     Math.min(
       CIERRE,
       finOriginal
     );
 
-
-  if (
-    fin <= inicio
-  ) {
-
+  if (fin <= inicio) {
     return null;
-
   }
 
-
   const top =
-
     (
       (inicio - APERTURA)
       /
       INTERVALO
     )
-
     *
-
     ALTO_SLOT;
 
-
   const height =
-
     (
       (fin - inicio)
       /
       INTERVALO
     )
-
     *
-
     ALTO_SLOT;
 
-
   return {
-
-    top:
-      top + 2,
-
-    height:
-      Math.max(
-        height - 4,
-        25
-      )
-
+    top: top + 2,
+    height: Math.max(
+      height - 4,
+      25
+    )
   };
-
 }
 
 
@@ -1148,98 +760,61 @@ function actualizarResumen() {
   const ocupados =
     new Set();
 
-
-  // ==================================================
-  // RESERVAS
-  // ==================================================
-
   reservasDia.forEach(
     (reserva) => {
-
       agregarSlotsOcupados(
         ocupados,
-        Number(
-          reserva.inicioMinutos
-        ),
-        Number(
-          reserva.finMinutos
-        )
+        Number(reserva.inicioMinutos),
+        Number(reserva.finMinutos)
       );
-
     }
   );
-
-
-  // ==================================================
-  // BLOQUEOS
-  // ==================================================
 
   bloqueosDia.forEach(
     (bloqueo) => {
-
       agregarSlotsOcupados(
-
         ocupados,
-
         bloqueo.diaCompleto
           ? APERTURA
-          : Number(
-            bloqueo.inicioMinutos
-          ),
-
+          : Number(bloqueo.inicioMinutos),
         bloqueo.diaCompleto
           ? CIERRE
-          : Number(
-            bloqueo.finMinutos
-          )
-
+          : Number(bloqueo.finMinutos)
       );
-
     }
   );
-
 
   const totalSlots =
     (CIERRE - APERTURA)
     /
     INTERVALO;
 
-
   const slotsLibres =
     Math.max(
-      totalSlots
-      -
-      ocupados.size,
+      totalSlots - ocupados.size,
       0
     );
 
-
   const minutosLibres =
-    slotsLibres
-    *
-    INTERVALO;
-
+    slotsLibres * INTERVALO;
 
   const textoReservas =
     reservasDia.length === 1
       ? "1 reserva"
       : `${reservasDia.length} reservas`;
 
-
   const textoBloqueos =
     bloqueosDia.length === 1
       ? "1 bloqueo"
       : `${bloqueosDia.length} bloqueos`;
 
-
   agendaVisualResumen.textContent =
     `${textoReservas} · ${textoBloqueos} · ${formatearDuracion(minutosLibres)} libres`;
-
 }
 
 
 // ==================================================
-// AGREGAR SLOTS A SET
+// AGREGAR SLOTS OCUPADOS
 // ==================================================
 
 function agregarSlotsOcupados(
@@ -1249,19 +824,12 @@ function agregarSlotsOcupados(
 ) {
 
   if (
-    !Number.isFinite(
-      inicio
-    )
+    !Number.isFinite(inicio)
     ||
-    !Number.isFinite(
-      fin
-    )
+    !Number.isFinite(fin)
   ) {
-
     return;
-
   }
-
 
   const inicioReal =
     Math.max(
@@ -1269,35 +837,24 @@ function agregarSlotsOcupados(
       APERTURA
     );
 
-
   const finReal =
     Math.min(
       fin,
       CIERRE
     );
 
-
   for (
-    let minuto =
-      inicioReal;
-
-    minuto <
-    finReal;
-
+    let minuto = inicioReal;
+    minuto < finReal;
     minuto += INTERVALO
   ) {
-
-    set.add(
-      minuto
-    );
-
+    set.add(minuto);
   }
-
 }
 
 
 // ==================================================
-// CLIENTE
+// NOMBRE DEL CLIENTE PARA LA AGENDA VISUAL
 // ==================================================
 
 async function obtenerNombreCliente(
@@ -1305,24 +862,12 @@ async function obtenerNombreCliente(
 ) {
 
   if (!usuarioId) {
-
     return "Cliente";
-
   }
 
-
-  if (
-    clientesCache.has(
-      usuarioId
-    )
-  ) {
-
-    return clientesCache.get(
-      usuarioId
-    );
-
+  if (clientesCache.has(usuarioId)) {
+    return clientesCache.get(usuarioId);
   }
-
 
   try {
 
@@ -1335,20 +880,13 @@ async function obtenerNombreCliente(
         )
       );
 
-
-    if (
-      documento.exists()
-    ) {
+    if (documento.exists()) {
 
       const datos =
         documento.data();
 
-
       const nombre =
-        datos.nombre
-        ||
-        "";
-
+        datos.nombre || "";
 
       const apellido =
         datos.apellido
@@ -1359,23 +897,18 @@ async function obtenerNombreCliente(
         ||
         "";
 
-
       const nombreCompleto =
         `${nombre} ${apellido}`.trim()
         ||
         "Cliente";
-
 
       clientesCache.set(
         usuarioId,
         nombreCompleto
       );
 
-
       return nombreCompleto;
-
     }
-
 
   } catch (error) {
 
@@ -1383,84 +916,454 @@ async function obtenerNombreCliente(
       "Error obteniendo nombre cliente:",
       error
     );
-
   }
-
 
   clientesCache.set(
     usuarioId,
     "Cliente"
   );
 
-
   return "Cliente";
-
 }
 
 
 // ==================================================
-// CLIC EN RESERVA VISUAL
+// DATOS COMPLETOS DEL CLIENTE
 // ==================================================
 
-function buscarTarjetaReserva(
-  reservaId
+async function obtenerDatosCliente(
+  usuarioId
 ) {
 
-  const tarjetas =
-    document.querySelectorAll(
-      "[data-reserva-id]"
-    );
-
-
-  const tarjeta =
-    Array.from(
-      tarjetas
-    ).find(
-      (elemento) =>
-        elemento.dataset.reservaId
-        === reservaId
-    );
-
-
-  if (!tarjeta) {
-
-    return;
-
+  if (!usuarioId) {
+    return {
+      nombreCompleto: "Cliente",
+      telefono: "",
+      correo: ""
+    };
   }
 
+  if (
+    clientesDatosCache.has(
+      usuarioId
+    )
+  ) {
+    return clientesDatosCache.get(
+      usuarioId
+    );
+  }
 
-  tarjeta.scrollIntoView(
-    {
-      behavior:
-        "smooth",
+  try {
 
-      block:
-        "center"
-    }
-  );
-
-
-  tarjeta.classList.add(
-    "admin-reserva-destacada"
-  );
-
-
-  window.setTimeout(
-    () => {
-
-      tarjeta.classList.remove(
-        "admin-reserva-destacada"
+    const documento =
+      await getDoc(
+        doc(
+          db,
+          "usuarios",
+          usuarioId
+        )
       );
 
-    },
-    1800
-  );
+    if (documento.exists()) {
 
+      const datos =
+        documento.data();
+
+      const nombre =
+        datos.nombre || "";
+
+      const apellido =
+        datos.apellido
+        ||
+        datos.apellidos
+        ||
+        datos.surname
+        ||
+        "";
+
+      const cliente = {
+        nombreCompleto:
+          `${nombre} ${apellido}`.trim()
+          ||
+          "Cliente",
+
+        telefono:
+          datos.telefono
+          ||
+          datos.phone
+          ||
+          "",
+
+        correo:
+          datos.correo
+          ||
+          datos.email
+          ||
+          ""
+      };
+
+      clientesDatosCache.set(
+        usuarioId,
+        cliente
+      );
+
+      return cliente;
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Error obteniendo cliente:",
+      error
+    );
+  }
+
+  return {
+    nombreCompleto: "Cliente",
+    telefono: "",
+    correo: ""
+  };
 }
 
 
 // ==================================================
-// LÍNEA HORA ACTUAL
+// ABRIR DETALLE DE RESERVA
+// ==================================================
+
+async function abrirDetalleReservaAgenda(
+  reserva
+) {
+
+  const cliente =
+    await obtenerDatosCliente(
+      reserva.usuarioId
+    );
+
+  detalleReservaActual = {
+    reserva,
+    cliente
+  };
+
+  // Nombre principal.
+  detalleAgendaCliente.textContent =
+    cliente.nombreCompleto;
+
+  // ==================================================
+  // INFORMACIÓN DE LA CLIENTA
+  // ==================================================
+
+  detalleAgendaDatosCliente.replaceChildren();
+
+  detalleAgendaDatosCliente.append(
+    crearDatoDetalle(
+      "Nombre",
+      cliente.nombreCompleto
+    ),
+    crearDatoDetalle(
+      "WhatsApp",
+      cliente.telefono || "Sin teléfono"
+    ),
+    crearDatoDetalle(
+      "Correo",
+      cliente.correo || "Sin correo"
+    )
+  );
+
+  // ==================================================
+  // INFORMACIÓN DE LA RESERVA
+  // ==================================================
+
+  detalleAgendaDatosReserva.replaceChildren();
+
+  detalleAgendaDatosReserva.append(
+    crearDatoDetalle(
+      "Servicio",
+      reserva.servicioNombre || "Servicio"
+    ),
+    crearDatoDetalle(
+      "Fecha",
+      formatearFecha(reserva.fecha)
+    ),
+    crearDatoDetalle(
+      "Horario",
+      `${reserva.horaInicio || "--:--"} - ${reserva.horaFin || "--:--"}`
+    ),
+    crearDatoDetalle(
+      "Duración",
+      formatearDuracion(
+        reserva.duracionMinutos
+      )
+    ),
+    crearDatoDetalle(
+      "Estado",
+      obtenerTextoEstado(
+        reserva.estado
+      )
+    ),
+    crearDatoDetalle(
+      "Valor",
+      formatearPrecioAgenda(
+        reserva.precio,
+        reserva.precioDesde
+      )
+    )
+  );
+
+  // ==================================================
+  // MENSAJE INICIAL PARA WHATSAPP
+  // ==================================================
+
+  const primerNombre =
+    cliente.nombreCompleto
+      .trim()
+      .split(/\s+/)[0]
+    ||
+    "Cliente";
+
+  mensajeContactoAgenda.value =
+    `Hola ${primerNombre}, soy Javii de Bonsai 🌿\n\n`
+    +
+    `Te escribo por tu reserva de ${reserva.servicioNombre || "tu servicio"}, `
+    +
+    `agendada para el ${formatearFecha(reserva.fecha)} `
+    +
+    `a las ${reserva.horaInicio || ""}.\n\n`
+    +
+    `Quería coordinar algunos detalles de tu llegada y atención.`;
+
+  // ==================================================
+  // VALIDAR WHATSAPP
+  // ==================================================
+
+  const telefonoValido =
+    normalizarTelefonoAgenda(
+      cliente.telefono
+    );
+
+  btnContactarAgenda.disabled =
+    !telefonoValido;
+
+  btnContactarAgenda.textContent =
+    telefonoValido
+      ? "Contactar por WhatsApp"
+      : "Sin WhatsApp válido";
+
+  // Mostrar modal.
+  modalDetalleAgenda.classList.remove(
+    "oculto"
+  );
+}
+
+
+// ==================================================
+// CREAR DATO DEL DETALLE
+// ==================================================
+
+function crearDatoDetalle(
+  etiqueta,
+  valor
+) {
+
+  const elemento =
+    document.createElement("div");
+
+  const label =
+    document.createElement("span");
+
+  label.textContent = etiqueta;
+
+  const texto =
+    document.createElement("strong");
+
+  texto.textContent = valor;
+
+  elemento.append(
+    label,
+    texto
+  );
+
+  return elemento;
+}
+
+
+// ==================================================
+// PRECIO DEL DETALLE
+// ==================================================
+
+function formatearPrecioAgenda(
+  precio,
+  desde
+) {
+
+  if (
+    precio === undefined
+    ||
+    precio === null
+  ) {
+    return "Sin valor";
+  }
+
+  const numero =
+    Number(precio);
+
+  if (!Number.isFinite(numero)) {
+    return "Sin valor";
+  }
+
+  const valor =
+    new Intl.NumberFormat(
+      "es-CL",
+      {
+        style: "currency",
+        currency: "CLP",
+        maximumFractionDigits: 0
+      }
+    ).format(numero);
+
+  return desde
+    ? `Desde ${valor}`
+    : valor;
+}
+
+
+// ==================================================
+// NORMALIZAR TELÉFONO PARA WHATSAPP
+// ==================================================
+
+function normalizarTelefonoAgenda(
+  telefono
+) {
+
+  let numero =
+    String(
+      telefono || ""
+    ).replace(
+      /\D/g,
+      ""
+    );
+
+  // 912345678
+  if (
+    numero.length === 9
+    &&
+    numero.startsWith("9")
+  ) {
+    numero = "56" + numero;
+  }
+
+  // 0912345678
+  if (
+    numero.length === 10
+    &&
+    numero.startsWith("09")
+  ) {
+    numero =
+      "56"
+      +
+      numero.substring(1);
+  }
+
+  if (
+    numero.length !== 11
+    ||
+    !numero.startsWith("569")
+  ) {
+    return "";
+  }
+
+  return numero;
+}
+
+
+// ==================================================
+// CONTACTAR POR WHATSAPP
+// ==================================================
+
+btnContactarAgenda.addEventListener(
+  "click",
+  () => {
+
+    if (!detalleReservaActual) {
+      return;
+    }
+
+    const telefono =
+      normalizarTelefonoAgenda(
+        detalleReservaActual
+          .cliente
+          .telefono
+      );
+
+    if (!telefono) {
+      alert(
+        "La clienta no tiene un WhatsApp válido."
+      );
+      return;
+    }
+
+    const mensaje =
+      mensajeContactoAgenda
+        .value
+        .trim();
+
+    if (!mensaje) {
+      alert(
+        "Escribe un mensaje para la clienta."
+      );
+
+      mensajeContactoAgenda.focus();
+      return;
+    }
+
+    const enlace =
+      `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+
+    window.open(
+      enlace,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+);
+
+
+// ==================================================
+// CERRAR DETALLE DE RESERVA
+// ==================================================
+
+function cerrarDetalleReservaAgenda() {
+
+  modalDetalleAgenda.classList.add(
+    "oculto"
+  );
+
+  detalleReservaActual = null;
+}
+
+cerrarDetalleAgenda.addEventListener(
+  "click",
+  cerrarDetalleReservaAgenda
+);
+
+btnCerrarDetalleAgenda.addEventListener(
+  "click",
+  cerrarDetalleReservaAgenda
+);
+
+modalDetalleAgenda.addEventListener(
+  "click",
+  (evento) => {
+    if (
+      evento.target === modalDetalleAgenda
+    ) {
+      cerrarDetalleReservaAgenda();
+    }
+  }
+);
+
+
+// ==================================================
+// LÍNEA DE HORA ACTUAL
 // ==================================================
 
 function agregarLineaHoraActual(
@@ -1470,85 +1373,57 @@ function agregarLineaHoraActual(
   if (
     fecha !== obtenerFechaHoy()
   ) {
-
     return;
-
   }
-
 
   const ahora =
     new Date();
 
-
   const minutoActual =
-
-    ahora.getHours()
-    *
-    60
-
+    ahora.getHours() * 60
     +
-
     ahora.getMinutes();
-
 
   if (
     minutoActual < APERTURA
     ||
     minutoActual > CIERRE
   ) {
-
     return;
-
   }
 
-
   const top =
-
     (
       (minutoActual - APERTURA)
       /
       INTERVALO
     )
-
     *
-
     ALTO_SLOT;
 
-
   const linea =
-    document.createElement(
-      "div"
-    );
-
+    document.createElement("div");
 
   linea.classList.add(
     "agenda-ahora-linea"
   );
 
-
   linea.style.top =
     `${top}px`;
 
-
   const etiqueta =
-    document.createElement(
-      "span"
-    );
-
+    document.createElement("span");
 
   etiqueta.textContent =
     "Ahora";
-
 
   linea.appendChild(
     etiqueta
   );
 
-
   agendaVisualEventos.appendChild(
     linea
   );
-
 }
 
 
@@ -1563,36 +1438,25 @@ function obtenerClaseEstado(
   switch (estado) {
 
     case "pendiente":
-
       return "agenda-evento-pendiente";
 
-
     case "confirmada":
-
       return "agenda-evento-confirmada";
-
 
     case "cambio_solicitado":
-
       return "agenda-evento-cambio";
 
-
     case "reagendada":
-
       return "agenda-evento-reagendada";
 
-
     default:
-
       return "agenda-evento-confirmada";
-
   }
-
 }
 
 
 // ==================================================
-// TEXTO ESTADO
+// TEXTO DEL ESTADO
 // ==================================================
 
 function obtenerTextoEstado(
@@ -1602,33 +1466,26 @@ function obtenerTextoEstado(
   switch (estado) {
 
     case "pendiente":
-
       return "Pendiente";
 
-
     case "confirmada":
-
       return "Confirmada";
 
-
     case "cambio_solicitado":
-
       return "Cambio solicitado";
 
-
     case "reagendada":
-
       return "Reagendada";
 
+    case "cancelada_admin":
+      return "Cancelada por Bonsai";
+
+    case "cancelada_cliente":
+      return "Cancelada por clienta";
 
     default:
-
-      return estado
-        ||
-        "Reserva";
-
+      return estado || "Reserva";
   }
-
 }
 
 
@@ -1645,17 +1502,16 @@ function fechaAtencionValida(
       fechaTexto
     );
 
-
   const dia =
     fecha.getDay();
 
-
+  // Domingo = 0
+  // Lunes = 1
   return (
     dia !== 0
     &&
     dia !== 1
   );
-
 }
 
 
@@ -1668,29 +1524,16 @@ function obtenerFechaHoy() {
   const hoy =
     new Date();
 
-
   return [
-
     hoy.getFullYear(),
-
     String(
       hoy.getMonth() + 1
-    ).padStart(
-      2,
-      "0"
-    ),
-
+    ).padStart(2, "0"),
     String(
       hoy.getDate()
-    ).padStart(
-      2,
-      "0"
-    )
-
+    ).padStart(2, "0")
   ].join("-");
-
 }
-
 
 function crearFechaLocal(
   fechaTexto
@@ -1701,51 +1544,32 @@ function crearFechaLocal(
       fechaTexto
     ).split("-");
 
-
   return new Date(
-
-    Number(
-      partes[0]
-    ),
-
-    Number(
-      partes[1]
-    ) - 1,
-
-    Number(
-      partes[2]
-    )
-
+    Number(partes[0]),
+    Number(partes[1]) - 1,
+    Number(partes[2])
   );
-
 }
-
 
 function formatearFecha(
   fechaTexto
 ) {
+
+  if (!fechaTexto) {
+    return "Sin fecha";
+  }
 
   return crearFechaLocal(
     fechaTexto
   ).toLocaleDateString(
     "es-CL",
     {
-
-      weekday:
-        "long",
-
-      day:
-        "2-digit",
-
-      month:
-        "long",
-
-      year:
-        "numeric"
-
+      weekday: "long",
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
     }
   );
-
 }
 
 
@@ -1762,35 +1586,16 @@ function minutosAHora(
       total / 60
     );
 
-
   const minutos =
     total % 60;
 
-
   return (
-
-    String(
-      horas
-    ).padStart(
-      2,
-      "0"
-    )
-
+    String(horas).padStart(2, "0")
     +
-
     ":"
-
     +
-
-    String(
-      minutos
-    ).padStart(
-      2,
-      "0"
-    )
-
+    String(minutos).padStart(2, "0")
   );
-
 }
 
 
@@ -1803,52 +1608,35 @@ function formatearDuracion(
 ) {
 
   minutos =
-    Number(
-      minutos
-    );
-
+    Number(minutos);
 
   if (
+    !Number.isFinite(minutos)
+    ||
     minutos <= 0
   ) {
-
     return "0 min";
-
   }
-
 
   const horas =
     Math.floor(
       minutos / 60
     );
 
-
   const resto =
     minutos % 60;
 
-
-  if (
-    horas === 0
-  ) {
-
+  if (horas === 0) {
     return `${resto} min`;
-
   }
 
-
-  if (
-    resto === 0
-  ) {
-
+  if (resto === 0) {
     return horas === 1
       ? "1 hora"
       : `${horas} horas`;
-
   }
 
-
   return `${horas} h ${resto} min`;
-
 }
 
 
@@ -1861,21 +1649,14 @@ function capitalizar(
 ) {
 
   if (!texto) {
-
     return "";
-
   }
 
-
   return (
-    texto.charAt(0)
-      .toUpperCase()
-
+    texto.charAt(0).toUpperCase()
     +
-
     texto.slice(1)
   );
-
 }
 
 
@@ -1886,30 +1667,17 @@ function capitalizar(
 function detenerEscuchas() {
 
   if (
-    typeof detenerReservas
-    === "function"
+    typeof detenerReservas === "function"
   ) {
-
     detenerReservas();
-
   }
-
 
   if (
-    typeof detenerBloqueos
-    === "function"
+    typeof detenerBloqueos === "function"
   ) {
-
     detenerBloqueos();
-
   }
 
-
-  detenerReservas =
-    null;
-
-
-  detenerBloqueos =
-    null;
-
+  detenerReservas = null;
+  detenerBloqueos = null;
 }

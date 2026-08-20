@@ -3962,3 +3962,1960 @@ button.agenda-evento-reserva:hover {
   }
 
 }
+
+/* ==================================================
+   AGREGAR SERVICIO
+================================================== */
+
+.admin-titulo-con-accion {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 25px;
+}
+
+
+.btn-agregar-servicio {
+  flex: 0 0 auto;
+
+  min-height: 42px;
+
+  padding: 0 17px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #344c3d;
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.btn-agregar-servicio:hover {
+  background: #4d6756;
+}
+
+
+/* ==================================================
+   MODAL NUEVO SERVICIO
+================================================== */
+
+.modal-nuevo-servicio {
+  max-width: 590px;
+}
+
+
+.nuevo-servicio-descripcion {
+  margin: 8px 0 24px;
+
+  color: #818a83;
+
+  font-size: 11px;
+
+  line-height: 1.6;
+}
+
+
+.nuevo-servicio-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 0 13px;
+}
+
+
+.nuevo-servicio-completo {
+  grid-column: 1 / -1;
+}
+
+
+.btn-guardar-nuevo-servicio {
+  min-height: 42px;
+
+  padding: 0 18px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #344c3d;
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+.btn-guardar-nuevo-servicio:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 600px) {
+
+  .admin-titulo-con-accion {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+
+  .btn-agregar-servicio {
+    width: 100%;
+  }
+
+
+  .nuevo-servicio-grid {
+    grid-template-columns: 1fr;
+  }
+
+
+  .nuevo-servicio-completo {
+    grid-column: 1;
+  }
+
+}
+
+/* ==================================================
+   DETALLE RESERVA DESDE AGENDA
+================================================== */
+
+.modal-detalle-agenda {
+  max-width: 680px;
+}
+
+
+/* ==================================================
+   SECCIONES
+================================================== */
+
+.detalle-agenda-seccion {
+  margin-top: 25px;
+}
+
+
+.detalle-agenda-seccion h3 {
+  margin: 0 0 12px;
+
+  color: #344c3d;
+
+  font-size: 13px;
+
+  font-weight: 700;
+}
+
+
+/* ==================================================
+   DATOS
+================================================== */
+
+.detalle-agenda-datos {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 10px;
+
+  padding: 16px;
+
+  background: #f6f8f5;
+
+  border: 1px solid #e7ebe7;
+
+  border-radius: 8px;
+}
+
+
+.detalle-agenda-datos div {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding: 8px 0;
+}
+
+
+.detalle-agenda-datos span {
+  color: #929a94;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.7px;
+
+  text-transform: uppercase;
+}
+
+
+.detalle-agenda-datos strong {
+  overflow-wrap: anywhere;
+
+  color: #405248;
+
+  font-size: 12px;
+
+  line-height: 1.45;
+}
+
+
+/* ==================================================
+   MENSAJE WHATSAPP
+================================================== */
+
+.detalle-agenda-mensaje {
+  margin-top: 25px;
+}
+
+
+.detalle-agenda-mensaje label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #405248;
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.detalle-agenda-mensaje textarea {
+  width: 100%;
+
+  min-height: 125px;
+
+  padding: 13px 14px;
+
+  resize: vertical;
+
+  border: 1px solid #d7ddd8;
+
+  border-radius: 7px;
+
+  background: white;
+
+  color: #344c3d;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  line-height: 1.6;
+
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+
+.detalle-agenda-mensaje textarea:focus {
+  border-color: #78907e;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(103, 132, 111, 0.11);
+}
+
+
+.detalle-agenda-mensaje small {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #929a94;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   BOTÓN WHATSAPP
+================================================== */
+
+.btn-contactar-agenda {
+  min-height: 42px;
+
+  padding: 0 19px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background: #344c3d;
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+.btn-contactar-agenda:hover {
+  background: #4d6756;
+
+  transform: translateY(-1px);
+}
+
+
+.btn-contactar-agenda:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 550px) {
+
+  .detalle-agenda-datos {
+    grid-template-columns: 1fr;
+  }
+
+
+  .modal-detalle-agenda
+  .modal-acciones {
+    flex-direction: column;
+  }
+
+
+  .btn-contactar-agenda,
+  .modal-detalle-agenda
+  .btn-modal-volver {
+    width: 100%;
+  }
+
+}
+
+
+/* ==========================================================
+   BONSAI - TEMA BOTÁNICO PANEL ADMINISTRATIVO
+   Inspirado en la Gift Card del salón.
+   Pegar este bloque AL FINAL de admin.css.
+   No cambia IDs, clases ni funcionalidad JavaScript.
+========================================================== */
+
+:root {
+  --admin-verde-profundo: #304536;
+  --admin-verde: #526d58;
+  --admin-verde-suave: #7f9780;
+  --admin-salvia: #dfe7dc;
+  --admin-salvia-clara: #eef2eb;
+
+  --admin-rosa: #b8877f;
+  --admin-rosa-suave: #d8b8b1;
+
+  --admin-marfil: #fbf8f3;
+  --admin-crema: #f3eee6;
+  --admin-blanco: #fffdf9;
+
+  --admin-tinta: #29362d;
+  --admin-texto: #667068;
+  --admin-borde: #dfe5dc;
+
+  --admin-sombra:
+    0 16px 44px rgba(48, 69, 54, 0.075);
+
+  --admin-sombra-hover:
+    0 20px 52px rgba(48, 69, 54, 0.12);
+
+  --admin-radio: 16px;
+}
+
+
+/* ==========================================================
+   FONDO GENERAL
+========================================================== */
+
+.pagina-admin {
+  position: relative;
+
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 8% 5%,
+      rgba(127, 151, 128, 0.16),
+      transparent 23%
+    ),
+    radial-gradient(
+      circle at 92% 12%,
+      rgba(216, 184, 177, 0.15),
+      transparent 22%
+    ),
+    linear-gradient(
+      180deg,
+      #fbf8f3,
+      #f4f1e9
+    );
+
+  color: var(--admin-tinta);
+}
+
+
+/* Hojas decorativas sutiles */
+
+.pagina-admin::before,
+.pagina-admin::after {
+  content: "";
+
+  position: fixed;
+
+  width: 330px;
+  height: 330px;
+
+  pointer-events: none;
+
+  z-index: 0;
+
+  opacity: 0.13;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 360'%3E%3Cpath d='M16 22 C90 86 132 170 324 344' fill='none' stroke='%23526d58' stroke-width='5' stroke-linecap='round' opacity='.52'/%3E%3Cg fill='%235d7a61' opacity='.72'%3E%3Cellipse cx='68' cy='72' rx='28' ry='54' transform='rotate(-48 68 72)'/%3E%3Cellipse cx='105' cy='114' rx='28' ry='54' transform='rotate(40 105 114)'/%3E%3Cellipse cx='137' cy='149' rx='27' ry='52' transform='rotate(-44 137 149)'/%3E%3Cellipse cx='177' cy='191' rx='26' ry='50' transform='rotate(40 177 191)'/%3E%3Cellipse cx='215' cy='229' rx='26' ry='48' transform='rotate(-43 215 229)'/%3E%3Cellipse cx='255' cy='270' rx='25' ry='47' transform='rotate(40 255 270)'/%3E%3C/g%3E%3Cg fill='%23b8877f' opacity='.34'%3E%3Ccircle cx='49' cy='119' r='9'/%3E%3Ccircle cx='282' cy='218' r='8'/%3E%3Ccircle cx='309' cy='260' r='6'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+
+.pagina-admin::before {
+  top: -115px;
+  left: -100px;
+}
+
+
+.pagina-admin::after {
+  right: -110px;
+  bottom: -120px;
+
+  transform: rotate(180deg);
+}
+
+
+.admin-header,
+.admin-main,
+.admin-footer {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* ==========================================================
+   TIPOGRAFÍA
+========================================================== */
+
+.pagina-admin h1,
+.pagina-admin h2,
+.pagina-admin h3,
+.pagina-admin h4,
+.admin-logo {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+}
+
+
+.admin-subtitulo {
+  color: var(--admin-rosa) !important;
+
+  letter-spacing: 0.2em;
+}
+
+
+.admin-encabezado h1,
+.admin-titulo-seccion h2 {
+  color: var(--admin-verde-profundo);
+
+  font-weight: 500;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.admin-header {
+  background:
+    rgba(255, 253, 249, 0.94);
+
+  border-bottom:
+    1px solid rgba(82, 109, 88, 0.14);
+
+  box-shadow:
+    0 7px 28px rgba(48, 69, 54, 0.055);
+
+  backdrop-filter:
+    blur(14px);
+}
+
+
+.admin-logo {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    0.08em;
+}
+
+
+.admin-usuario-cargo {
+  color:
+    var(--admin-rosa);
+}
+
+
+.admin-usuario strong {
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.btn-admin-salir {
+  border:
+    1px solid rgba(82, 109, 88, 0.35);
+
+  border-radius:
+    999px;
+
+  background:
+    rgba(255, 253, 249, 0.85);
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.btn-admin-salir:hover {
+  border-color:
+    var(--admin-verde-suave);
+
+  background:
+    var(--admin-salvia-clara);
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+/* ==========================================================
+   ESTADÍSTICAS
+========================================================== */
+
+.admin-estadistica {
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    rgba(255, 253, 249, 0.96);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    var(--admin-radio);
+
+  box-shadow:
+    var(--admin-sombra);
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.admin-estadistica::after {
+  content: "";
+
+  position: absolute;
+
+  width: 92px;
+  height: 92px;
+
+  right: -48px;
+  top: -48px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(223, 231, 220, 0.76);
+}
+
+
+.admin-estadistica:nth-child(even)::after {
+  background:
+    rgba(216, 184, 177, 0.17);
+}
+
+
+.admin-estadistica:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(184, 135, 127, 0.28);
+
+  box-shadow:
+    var(--admin-sombra-hover);
+}
+
+
+.admin-estadistica span,
+.admin-estadistica strong {
+  position: relative;
+  z-index: 1;
+}
+
+
+.admin-estadistica strong {
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+/* ==========================================================
+   MENÚ ADMIN
+========================================================== */
+
+.admin-menu {
+  padding: 8px;
+
+  background:
+    rgba(255, 253, 249, 0.94);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    999px;
+
+  box-shadow:
+    0 10px 30px rgba(48, 69, 54, 0.05);
+}
+
+
+.admin-menu-btn {
+  border-radius:
+    999px;
+
+  color:
+    var(--admin-texto);
+}
+
+
+.admin-menu-btn:hover {
+  background:
+    var(--admin-salvia-clara);
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.admin-menu-btn.activo {
+  background:
+    linear-gradient(
+      135deg,
+      var(--admin-verde-profundo),
+      var(--admin-verde)
+    );
+
+  color:
+    white;
+
+  box-shadow:
+    0 7px 17px rgba(48, 69, 54, 0.16);
+}
+
+
+/* ==========================================================
+   TARJETAS GENERALES DEL PANEL
+========================================================== */
+
+.admin-reserva-card-nueva,
+.bloqueo-formulario-card,
+.bloqueos-listado-card,
+.admin-servicio-card,
+.calendario-card,
+.cliente-admin-card,
+.agenda-visual-card,
+.admin-sin-reservas,
+.admin-modulo-proximamente {
+  background:
+    rgba(255, 253, 249, 0.97);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    var(--admin-radio);
+
+  box-shadow:
+    var(--admin-sombra);
+}
+
+
+/* ==========================================================
+   SOLICITUDES / RESERVAS
+========================================================== */
+
+.admin-reserva-card-nueva {
+  position: relative;
+
+  overflow: hidden;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.admin-reserva-card-nueva::after {
+  content: "";
+
+  position: absolute;
+
+  width: 125px;
+  height: 125px;
+
+  right: -75px;
+  bottom: -78px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(223, 231, 220, 0.63);
+
+  pointer-events: none;
+}
+
+
+.admin-reserva-card-nueva:hover {
+  transform:
+    translateY(-2px);
+
+  border-color:
+    rgba(127, 151, 128, 0.34);
+
+  box-shadow:
+    var(--admin-sombra-hover);
+}
+
+
+.admin-reserva-superior,
+.admin-reserva-horario,
+.admin-cliente-datos,
+.admin-contacto,
+.admin-acciones-reserva {
+  position: relative;
+  z-index: 1;
+}
+
+
+.admin-reserva-fecha {
+  color:
+    var(--admin-rosa);
+}
+
+
+.admin-reserva-superior h3,
+.admin-reserva-horario strong {
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.admin-cliente-datos {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.94),
+      rgba(251, 248, 243, 0.96)
+    );
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    12px;
+}
+
+
+.admin-cliente-datos span {
+  color:
+    var(--admin-rosa);
+}
+
+
+.admin-cliente-datos strong {
+  color:
+    #46594c;
+}
+
+
+/* ==========================================================
+   ESTADOS
+========================================================== */
+
+.estado-pendiente {
+  background:
+    #f6eedc;
+
+  color:
+    #876b31;
+}
+
+
+.estado-confirmada {
+  background:
+    #e4eee4;
+
+  color:
+    #365340;
+}
+
+
+.estado-cambio {
+  background:
+    #f6e8df;
+
+  color:
+    #8b5f4d;
+}
+
+
+.estado-reagendada {
+  background:
+    #e7ece5;
+
+  color:
+    #52675a;
+}
+
+
+.estado-cancelada {
+  background:
+    #f3e2df;
+
+  color:
+    #965a54;
+}
+
+
+.estado-finalizada {
+  background:
+    #ebece8;
+
+  color:
+    #717870;
+}
+
+
+/* ==========================================================
+   BOTONES PRINCIPALES
+========================================================== */
+
+.btn-principal,
+.btn-admin-aceptar,
+.btn-crear-bloqueo,
+.btn-guardar-servicio,
+.btn-cliente-historial,
+.btn-modal-guardar,
+.btn-notificar-whatsapp,
+.btn-agregar-servicio,
+.btn-guardar-nuevo-servicio,
+.btn-contactar-agenda {
+  border:
+    1px solid rgba(48, 69, 54, 0.16) !important;
+
+  border-radius:
+    999px !important;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--admin-verde-profundo),
+      var(--admin-verde)
+    ) !important;
+
+  color:
+    white !important;
+
+  box-shadow:
+    0 9px 20px rgba(48, 69, 54, 0.13);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease !important;
+}
+
+
+.btn-principal:hover,
+.btn-admin-aceptar:hover,
+.btn-crear-bloqueo:hover,
+.btn-guardar-servicio:hover,
+.btn-cliente-historial:hover,
+.btn-modal-guardar:hover,
+.btn-notificar-whatsapp:hover,
+.btn-agregar-servicio:hover,
+.btn-guardar-nuevo-servicio:hover,
+.btn-contactar-agenda:hover {
+  background:
+    linear-gradient(
+      135deg,
+      #3e5745,
+      #6b816e
+    ) !important;
+
+  transform:
+    translateY(-1px);
+
+  box-shadow:
+    0 12px 26px rgba(48, 69, 54, 0.19);
+}
+
+
+/* Secundarios */
+
+.btn-whatsapp,
+.btn-whatsapp-modal,
+.btn-cliente-whatsapp,
+.btn-admin-reagendar,
+.btn-modal-volver,
+.calendario-hoy-btn {
+  border:
+    1px solid rgba(82, 109, 88, 0.38) !important;
+
+  border-radius:
+    999px !important;
+
+  background:
+    rgba(255, 253, 249, 0.92) !important;
+
+  color:
+    var(--admin-verde-profundo) !important;
+}
+
+
+.btn-whatsapp:hover,
+.btn-whatsapp-modal:hover,
+.btn-cliente-whatsapp:hover,
+.btn-admin-reagendar:hover,
+.btn-modal-volver:hover,
+.calendario-hoy-btn:hover {
+  border-color:
+    var(--admin-verde-suave) !important;
+
+  background:
+    var(--admin-salvia-clara) !important;
+
+  color:
+    var(--admin-verde-profundo) !important;
+}
+
+
+/* Acciones peligrosas conservan tono rojizo */
+
+.btn-admin-cancelar,
+.btn-modal-cancelar,
+.btn-eliminar-bloqueo {
+  border-radius:
+    999px !important;
+}
+
+
+/* ==========================================================
+   FILTROS Y FORMULARIOS
+========================================================== */
+
+.admin-filtros {
+  background:
+    rgba(255, 253, 249, 0.95);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    14px;
+
+  box-shadow:
+    0 10px 28px rgba(48, 69, 54, 0.04);
+}
+
+
+.admin-campo-fecha input,
+.campo-formulario input,
+.campo-formulario textarea,
+.campo-formulario select,
+.bloqueo-horarios select,
+.servicio-select,
+.clientes-buscador input,
+.detalle-agenda-mensaje textarea {
+  border:
+    1px solid #d7dfd6;
+
+  border-radius:
+    11px;
+
+  background:
+    rgba(255, 253, 249, 0.98);
+
+  color:
+    var(--admin-tinta);
+}
+
+
+.admin-campo-fecha input:focus,
+.campo-formulario input:focus,
+.campo-formulario textarea:focus,
+.campo-formulario select:focus,
+.bloqueo-horarios select:focus,
+.servicio-select:focus,
+.clientes-buscador input:focus,
+.detalle-agenda-mensaje textarea:focus {
+  border-color:
+    var(--admin-verde-suave);
+
+  box-shadow:
+    0 0 0 4px rgba(127, 151, 128, 0.13);
+
+  outline:
+    none;
+}
+
+
+.campo-formulario label,
+.admin-campo-fecha label,
+.bloqueo-label,
+.clientes-buscador label {
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+/* ==========================================================
+   BLOQUEOS
+========================================================== */
+
+.bloqueo-formulario-card,
+.bloqueos-listado-card {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.bloqueo-formulario-card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  right: -65px;
+  top: -65px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(216, 184, 177, 0.16);
+}
+
+
+.bloqueo-formulario-card > *,
+.bloqueos-listado-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.bloqueo-formulario-card h3,
+.bloqueos-listado-card h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.bloqueo-radio input,
+.servicio-check input {
+  accent-color:
+    var(--admin-verde-profundo);
+}
+
+
+.bloqueo-card {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.82),
+      rgba(251, 248, 243, 0.94)
+    );
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    12px;
+}
+
+
+.sin-bloqueos {
+  border:
+    1px dashed rgba(127, 151, 128, 0.42);
+
+  border-radius:
+    13px;
+
+  background:
+    rgba(251, 248, 243, 0.55);
+}
+
+
+/* ==========================================================
+   SERVICIOS
+========================================================== */
+
+.admin-servicio-card {
+  position:
+    relative;
+
+  overflow:
+    hidden;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.admin-servicio-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 108px;
+  height: 108px;
+
+  right: -62px;
+  bottom: -62px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(223, 231, 220, 0.7);
+
+  pointer-events: none;
+}
+
+
+.admin-servicio-card:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(184, 135, 127, 0.28);
+
+  box-shadow:
+    var(--admin-sombra-hover);
+}
+
+
+.admin-servicio-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.admin-servicio-cabecera {
+  border-bottom:
+    1px solid var(--admin-borde);
+}
+
+
+.admin-servicio-cabecera h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.servicio-estado-activo {
+  background:
+    var(--admin-salvia);
+
+  color:
+    #3c5945;
+}
+
+
+.servicio-estado-inactivo {
+  background:
+    #eeeae5;
+
+  color:
+    #77716d;
+}
+
+
+/* ==========================================================
+   CALENDARIO
+========================================================== */
+
+.calendario-card {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.calendario-card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 190px;
+  height: 190px;
+
+  right: -110px;
+  top: -115px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(223, 231, 220, 0.58);
+
+  pointer-events: none;
+}
+
+
+.calendario-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.calendario-mes span {
+  color:
+    var(--admin-rosa);
+}
+
+
+.calendario-mes h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.calendario-nav-btn {
+  border:
+    1px solid var(--admin-borde);
+
+  background:
+    var(--admin-blanco);
+
+  color:
+    var(--admin-verde-profundo);
+
+  box-shadow:
+    0 7px 18px rgba(48, 69, 54, 0.06);
+}
+
+
+.calendario-nav-btn:hover {
+  border-color:
+    var(--admin-verde-profundo);
+
+  background:
+    var(--admin-verde-profundo);
+
+  color:
+    white;
+}
+
+
+.calendario-leyenda {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.88),
+      rgba(251, 248, 243, 0.92)
+    );
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    12px;
+}
+
+
+.calendario-dia {
+  background:
+    rgba(255, 253, 249, 0.94);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    11px;
+}
+
+
+button.calendario-dia:hover {
+  border-color:
+    var(--admin-verde-suave);
+
+  box-shadow:
+    0 8px 20px rgba(48, 69, 54, 0.09);
+}
+
+
+.calendario-dia-hoy {
+  border-color:
+    var(--admin-rosa);
+}
+
+
+.calendario-dia-hoy
+.calendario-numero {
+  background:
+    var(--admin-verde-profundo);
+}
+
+
+.calendario-cerrado {
+  background:
+    #f4f1ec;
+}
+
+
+.calendario-indicador-reservas {
+  background:
+    #e4eee4;
+
+  color:
+    #3f6248;
+}
+
+
+.calendario-indicador-bloqueo {
+  background:
+    #f6eedc;
+
+  color:
+    #876b31;
+}
+
+
+.calendario-indicador-completo {
+  background:
+    #f3e2df;
+
+  color:
+    #965a54;
+}
+
+
+/* ==========================================================
+   CLIENTES
+========================================================== */
+
+.cliente-admin-card {
+  position: relative;
+  overflow: hidden;
+
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+
+.cliente-admin-card::after {
+  content: "";
+
+  position: absolute;
+
+  width: 95px;
+  height: 95px;
+
+  right: -50px;
+  top: -52px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(216, 184, 177, 0.14);
+}
+
+
+.cliente-admin-card:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    rgba(127, 151, 128, 0.32);
+
+  box-shadow:
+    var(--admin-sombra-hover);
+}
+
+
+.cliente-admin-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.cliente-avatar {
+  background:
+    linear-gradient(
+      145deg,
+      var(--admin-salvia),
+      #f4eee7
+    );
+
+  border:
+    1px solid rgba(82, 109, 88, 0.13);
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.cliente-identidad h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.cliente-admin-datos {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.85),
+      rgba(251, 248, 243, 0.94)
+    );
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    11px;
+}
+
+
+.cliente-admin-datos span {
+  color:
+    var(--admin-rosa);
+}
+
+
+.cliente-estadisticas div {
+  background:
+    rgba(255, 253, 249, 0.70);
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    10px;
+}
+
+
+/* ==========================================================
+   MODALES
+========================================================== */
+
+.modal-fondo {
+  background:
+    rgba(35, 48, 39, 0.57);
+
+  backdrop-filter:
+    blur(6px);
+}
+
+
+.modal-bonsai {
+  position: relative;
+
+  overflow-x: hidden;
+
+  background:
+    var(--admin-blanco);
+
+  border:
+    1px solid rgba(223, 229, 220, 0.92);
+
+  border-radius:
+    20px;
+
+  box-shadow:
+    0 28px 80px rgba(35, 48, 39, 0.27);
+}
+
+
+.modal-bonsai::before {
+  content: "";
+
+  position: absolute;
+
+  width: 150px;
+  height: 150px;
+
+  top: -88px;
+  right: -82px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(223, 231, 220, 0.75);
+
+  pointer-events: none;
+}
+
+
+.modal-bonsai h2,
+.modal-bonsai h3,
+.modal-bonsai .admin-subtitulo,
+.modal-bonsai form,
+.modal-bonsai .modal-introduccion,
+.modal-bonsai .modal-resumen,
+.modal-bonsai .modal-acciones,
+.modal-bonsai .detalle-agenda-seccion,
+.modal-bonsai .detalle-agenda-mensaje,
+.modal-bonsai .nuevo-servicio-descripcion {
+  position: relative;
+  z-index: 1;
+}
+
+
+.modal-bonsai h2 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.modal-cerrar {
+  z-index:
+    3;
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+.modal-cerrar:hover {
+  background:
+    var(--admin-salvia-clara);
+}
+
+
+.modal-resumen,
+.notificacion-whatsapp-resumen,
+.detalle-agenda-datos {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.91),
+      rgba(251, 248, 243, 0.96)
+    );
+
+  border:
+    1px solid var(--admin-borde);
+
+  border-radius:
+    12px;
+}
+
+
+/* ==========================================================
+   AGENDA VISUAL
+========================================================== */
+
+.agenda-visual-card {
+  position: relative;
+  overflow: hidden;
+}
+
+
+.agenda-visual-card::before {
+  content: "";
+
+  position: absolute;
+
+  width: 175px;
+  height: 175px;
+
+  right: -105px;
+  top: -105px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(216, 184, 177, 0.13);
+
+  pointer-events: none;
+}
+
+
+.agenda-visual-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+
+.agenda-visual-cabecera h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.agenda-leyenda-reserva {
+  background:
+    var(--admin-verde);
+}
+
+
+.agenda-leyenda-bloqueo {
+  background:
+    var(--admin-rosa);
+}
+
+
+.agenda-visual-cuerpo {
+  background:
+    rgba(255, 253, 249, 0.86);
+
+  border-left:
+    1px solid var(--admin-borde);
+
+  border-right:
+    1px solid var(--admin-borde);
+}
+
+
+.agenda-visual-linea {
+  background:
+    #eceee9;
+}
+
+
+.agenda-visual-linea-hora {
+  background:
+    #dde2db;
+}
+
+
+.agenda-evento-confirmada {
+  background:
+    #e1ebe0;
+
+  border-color:
+    #c2d3c3 !important;
+
+  color:
+    #35583f;
+}
+
+
+.agenda-evento-pendiente {
+  background:
+    #f6eedc;
+
+  border-color:
+    #e4d5b1 !important;
+
+  color:
+    #80652c;
+}
+
+
+.agenda-evento-cambio {
+  background:
+    #f5e6dc;
+
+  border-color:
+    #e6c9ba !important;
+
+  color:
+    #875e4e;
+}
+
+
+.agenda-evento-reagendada {
+  background:
+    #e7ece5;
+
+  border-color:
+    #ced8cc !important;
+
+  color:
+    #50665a;
+}
+
+
+.agenda-evento-bloqueo {
+  border:
+    1px dashed #d6aaa4;
+
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      #f7e9e6,
+      #f7e9e6 8px,
+      #f3dfdc 8px,
+      #f3dfdc 16px
+    );
+
+  color:
+    #8d5852;
+}
+
+
+.agenda-visual-cerrado {
+  border:
+    1px dashed rgba(127, 151, 128, 0.42);
+
+  border-radius:
+    13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(238, 242, 235, 0.72),
+      rgba(251, 248, 243, 0.82)
+    );
+}
+
+
+/* ==========================================================
+   DETALLE DE RESERVA
+========================================================== */
+
+.detalle-agenda-seccion h3 {
+  color:
+    var(--admin-verde-profundo);
+
+  font-weight:
+    500;
+}
+
+
+.detalle-agenda-datos span {
+  color:
+    var(--admin-rosa);
+}
+
+
+.detalle-agenda-datos strong {
+  color:
+    #46594c;
+}
+
+
+/* ==========================================================
+   NUEVO SERVICIO
+========================================================== */
+
+.nuevo-servicio-descripcion {
+  color:
+    var(--admin-texto);
+}
+
+
+/* ==========================================================
+   WHATSAPP CANCELACIÓN
+========================================================== */
+
+.notificacion-whatsapp-motivo {
+  background:
+    #f3e2df;
+
+  border:
+    1px solid #e8cfcb;
+
+  border-radius:
+    10px;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.admin-footer {
+  background:
+    linear-gradient(
+      135deg,
+      #283a2e,
+      #3d5643
+    );
+
+  border-top:
+    1px solid rgba(255, 255, 255, 0.08);
+}
+
+
+.admin-footer strong {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-weight:
+    500;
+
+  letter-spacing:
+    0.05em;
+}
+
+
+/* ==========================================================
+   SELECCIÓN
+========================================================== */
+
+.pagina-admin ::selection {
+  background:
+    var(--admin-salvia);
+
+  color:
+    var(--admin-verde-profundo);
+}
+
+
+/* ==========================================================
+   RESPONSIVE BOTÁNICO
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .pagina-admin::before,
+  .pagina-admin::after {
+    width: 250px;
+    height: 250px;
+
+    opacity: 0.09;
+  }
+
+
+  .admin-menu {
+    border-radius: 16px;
+  }
+
+}
+
+
+@media (max-width: 620px) {
+
+  .pagina-admin::before {
+    top: -130px;
+    left: -135px;
+  }
+
+
+  .pagina-admin::after {
+    right: -140px;
+    bottom: -130px;
+  }
+
+
+  .admin-estadistica,
+  .admin-reserva-card-nueva,
+  .bloqueo-formulario-card,
+  .bloqueos-listado-card,
+  .admin-servicio-card,
+  .calendario-card,
+  .cliente-admin-card,
+  .agenda-visual-card,
+  .modal-bonsai {
+    border-radius: 14px;
+  }
+
+
+  .admin-menu {
+    border-radius: 14px;
+  }
+
+
+  .admin-menu-btn {
+    border-radius: 999px;
+  }
+
+}
+
+
+/* ==========================================================
+   FIN TEMA BOTÁNICO ADMIN
+========================================================== */

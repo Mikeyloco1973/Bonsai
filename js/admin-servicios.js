@@ -3,17 +3,23 @@
 // ADMINISTRACIÓN DE SERVICIOS
 // ==================================================
 
-import { auth, db } from "./firebase-config.js";
+import {
+  auth,
+  db
+} from "./firebase-config.js";
+
 
 import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 import {
   collection,
   getDocs,
   getDoc,
   doc,
+  setDoc,
   updateDoc,
   writeBatch,
   serverTimestamp
@@ -190,7 +196,7 @@ const SERVICIOS_INICIALES = {
 
 
 // ==================================================
-// ELEMENTOS
+// ELEMENTOS PRINCIPALES
 // ==================================================
 
 const cargandoServicios =
@@ -202,6 +208,76 @@ const cargandoServicios =
 const listaServiciosAdmin =
   document.getElementById(
     "listaServiciosAdmin"
+  );
+
+
+// ==================================================
+// ELEMENTOS NUEVO SERVICIO
+// ==================================================
+
+const btnAgregarServicio =
+  document.getElementById(
+    "btnAgregarServicio"
+  );
+
+
+const modalNuevoServicio =
+  document.getElementById(
+    "modalNuevoServicio"
+  );
+
+
+const cerrarModalNuevoServicio =
+  document.getElementById(
+    "cerrarModalNuevoServicio"
+  );
+
+
+const cancelarNuevoServicio =
+  document.getElementById(
+    "cancelarNuevoServicio"
+  );
+
+
+const formNuevoServicio =
+  document.getElementById(
+    "formNuevoServicio"
+  );
+
+
+const nuevoServicioNombre =
+  document.getElementById(
+    "nuevoServicioNombre"
+  );
+
+
+const nuevoServicioPrecio =
+  document.getElementById(
+    "nuevoServicioPrecio"
+  );
+
+
+const nuevoServicioDuracion =
+  document.getElementById(
+    "nuevoServicioDuracion"
+  );
+
+
+const nuevoServicioDesde =
+  document.getElementById(
+    "nuevoServicioDesde"
+  );
+
+
+const nuevoServicioActivo =
+  document.getElementById(
+    "nuevoServicioActivo"
+  );
+
+
+const guardarNuevoServicio =
+  document.getElementById(
+    "guardarNuevoServicio"
   );
 
 
@@ -244,11 +320,16 @@ onAuthStateChanged(
       }
 
 
-      // Crear automáticamente los servicios
-      // que todavía no existan.
+      // ==========================================
+      // CREAR SERVICIOS BASE SI FALTAN
+      // ==========================================
 
       await asegurarServiciosIniciales();
 
+
+      // ==========================================
+      // CARGAR SERVICIOS
+      // ==========================================
 
       await cargarServiciosAdmin();
 
@@ -271,7 +352,503 @@ onAuthStateChanged(
 
 
 // ==================================================
-// CREAR SERVICIOS QUE FALTEN
+// DURACIONES DEL NUEVO SERVICIO
+// ==================================================
+
+function generarDuracionesNuevoServicio() {
+
+  nuevoServicioDuracion
+    .replaceChildren();
+
+
+  for (
+    let minutos = 30;
+    minutos <= 360;
+    minutos += 30
+  ) {
+
+    const opcion =
+      document.createElement(
+        "option"
+      );
+
+
+    opcion.value =
+      String(
+        minutos
+      );
+
+
+    opcion.textContent =
+      formatearDuracion(
+        minutos
+      );
+
+
+    // Por defecto 1 hora 30 min
+
+    if (
+      minutos === 90
+    ) {
+
+      opcion.selected =
+        true;
+
+    }
+
+
+    nuevoServicioDuracion
+      .appendChild(
+        opcion
+      );
+
+  }
+
+}
+
+
+// ==================================================
+// ABRIR MODAL NUEVO SERVICIO
+// ==================================================
+
+btnAgregarServicio.addEventListener(
+  "click",
+  () => {
+
+    formNuevoServicio.reset();
+
+
+    nuevoServicioActivo.checked =
+      true;
+
+
+    nuevoServicioDesde.checked =
+      false;
+
+
+    generarDuracionesNuevoServicio();
+
+
+    modalNuevoServicio.classList.remove(
+      "oculto"
+    );
+
+
+    nuevoServicioNombre.focus();
+
+  }
+);
+
+
+// ==================================================
+// CERRAR MODAL NUEVO SERVICIO
+// ==================================================
+
+function cerrarNuevoServicio() {
+
+  modalNuevoServicio.classList.add(
+    "oculto"
+  );
+
+
+  formNuevoServicio.reset();
+
+}
+
+
+cerrarModalNuevoServicio.addEventListener(
+  "click",
+  cerrarNuevoServicio
+);
+
+
+cancelarNuevoServicio.addEventListener(
+  "click",
+  cerrarNuevoServicio
+);
+
+
+modalNuevoServicio.addEventListener(
+  "click",
+  (evento) => {
+
+    if (
+      evento.target
+      === modalNuevoServicio
+    ) {
+
+      cerrarNuevoServicio();
+
+    }
+
+  }
+);
+
+
+// ==================================================
+// CREAR NUEVO SERVICIO
+// ==================================================
+
+formNuevoServicio.addEventListener(
+  "submit",
+  async (evento) => {
+
+    evento.preventDefault();
+
+
+    const nombre =
+      nuevoServicioNombre
+        .value
+        .trim();
+
+
+    const precio =
+      Number(
+        nuevoServicioPrecio.value
+      );
+
+
+    const duracion =
+      Number(
+        nuevoServicioDuracion.value
+      );
+
+
+    // ==================================================
+    // VALIDAR NOMBRE
+    // ==================================================
+
+    if (
+      nombre.length < 2
+    ) {
+
+      alert(
+        "Ingresa un nombre válido."
+      );
+
+
+      nuevoServicioNombre.focus();
+
+
+      return;
+
+    }
+
+
+    // ==================================================
+    // VALIDAR PRECIO
+    // ==================================================
+
+    if (
+      !Number.isFinite(
+        precio
+      )
+      ||
+      precio < 0
+    ) {
+
+      alert(
+        "Ingresa un precio válido."
+      );
+
+
+      nuevoServicioPrecio.focus();
+
+
+      return;
+
+    }
+
+
+    // ==================================================
+    // VALIDAR DURACIÓN
+    // ==================================================
+
+    if (
+      !Number.isFinite(
+        duracion
+      )
+      ||
+      duracion < 30
+      ||
+      duracion > 360
+      ||
+      duracion % 30 !== 0
+    ) {
+
+      alert(
+        "Selecciona una duración válida."
+      );
+
+
+      return;
+
+    }
+
+
+    guardarNuevoServicio.disabled =
+      true;
+
+
+    guardarNuevoServicio.textContent =
+      "Agregando...";
+
+
+    try {
+
+      // ==================================================
+      // GENERAR ID
+      // ==================================================
+
+      const id =
+        await generarIdServicio(
+          nombre
+        );
+
+
+      // ==================================================
+      // OBTENER POSICIÓN
+      // ==================================================
+
+      const orden =
+        await obtenerSiguienteOrden();
+
+
+      // ==================================================
+      // GUARDAR EN FIRESTORE
+      // ==================================================
+
+      await setDoc(
+        doc(
+          db,
+          "servicios",
+          id
+        ),
+        {
+
+          nombre:
+          nombre,
+
+          precio:
+          precio,
+
+          precioDesde:
+          nuevoServicioDesde.checked,
+
+          duracionMinutos:
+          duracion,
+
+          activo:
+          nuevoServicioActivo.checked,
+
+          orden:
+          orden,
+
+          fechaCreacion:
+            serverTimestamp(),
+
+          fechaActualizacion:
+            serverTimestamp()
+
+        }
+      );
+
+
+      // ==================================================
+      // CERRAR MODAL
+      // ==================================================
+
+      cerrarNuevoServicio();
+
+
+      // ==================================================
+      // ACTUALIZAR LISTA
+      // ==================================================
+
+      await cargarServiciosAdmin();
+
+
+      alert(
+        "Servicio agregado correctamente."
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Error agregando servicio:",
+        error
+      );
+
+
+      alert(
+        "No fue posible agregar el servicio."
+      );
+
+
+    } finally {
+
+      guardarNuevoServicio.disabled =
+        false;
+
+
+      guardarNuevoServicio.textContent =
+        "Agregar servicio";
+
+    }
+
+  }
+);
+
+
+// ==================================================
+// GENERAR ID DEL SERVICIO
+// ==================================================
+
+async function generarIdServicio(
+  nombre
+) {
+
+  let base =
+    normalizarId(
+      nombre
+    );
+
+
+  if (!base) {
+
+    base =
+      "servicio";
+
+  }
+
+
+  let id =
+    base;
+
+
+  let numero =
+    2;
+
+
+  // ==================================================
+  // EVITAR IDs REPETIDOS
+  // ==================================================
+
+  while (true) {
+
+    const documento =
+      await getDoc(
+        doc(
+          db,
+          "servicios",
+          id
+        )
+      );
+
+
+    if (
+      !documento.exists()
+    ) {
+
+      return id;
+
+    }
+
+
+    id =
+      `${base}-${numero}`;
+
+
+    numero++;
+
+  }
+
+}
+
+
+// ==================================================
+// NORMALIZAR ID
+// ==================================================
+
+function normalizarId(
+  texto
+) {
+
+  return String(
+    texto || ""
+  )
+    .normalize(
+      "NFD"
+    )
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
+    .toLowerCase()
+    .trim()
+    .replace(
+      /[^a-z0-9]+/g,
+      "-"
+    )
+    .replace(
+      /^-+|-+$/g,
+      ""
+    );
+
+}
+
+
+// ==================================================
+// OBTENER SIGUIENTE ORDEN
+// ==================================================
+
+async function obtenerSiguienteOrden() {
+
+  const resultado =
+    await getDocs(
+      collection(
+        db,
+        "servicios"
+      )
+    );
+
+
+  let mayor =
+    0;
+
+
+  resultado.forEach(
+    (documento) => {
+
+      const orden =
+        Number(
+          documento.data().orden
+          ||
+          0
+        );
+
+
+      if (
+        orden > mayor
+      ) {
+
+        mayor =
+          orden;
+
+      }
+
+    }
+  );
+
+
+  return mayor + 1;
+
+}
+
+
+// ==================================================
+// ASEGURAR SERVICIOS INICIALES
 // ==================================================
 
 async function asegurarServiciosIniciales() {
@@ -287,7 +864,10 @@ async function asegurarServiciosIniciales() {
 
 
   for (
-    const [id, servicio]
+    const [
+      id,
+      servicio
+    ]
     of Object.entries(
     SERVICIOS_INICIALES
   )
@@ -307,9 +887,9 @@ async function asegurarServiciosIniciales() {
       );
 
 
-    // IMPORTANTE:
-    // solamente creamos el documento si no existe.
-    // No sobrescribimos cambios realizados por Javii.
+    // ==========================================
+    // SOLO CREAR SI NO EXISTE
+    // ==========================================
 
     if (
       !documento.exists()
@@ -339,7 +919,9 @@ async function asegurarServiciosIniciales() {
   }
 
 
-  if (hayCambios) {
+  if (
+    hayCambios
+  ) {
 
     await batch.commit();
 
@@ -354,8 +936,7 @@ async function asegurarServiciosIniciales() {
 
 async function cargarServiciosAdmin() {
 
-  listaServiciosAdmin.innerHTML =
-    "";
+  listaServiciosAdmin.replaceChildren();
 
 
   cargandoServicios.classList.remove(
@@ -398,12 +979,19 @@ async function cargarServiciosAdmin() {
     );
 
 
+    // ==================================================
+    // ORDENAR SERVICIOS
+    // ==================================================
+
     servicios.sort(
       (a, b) =>
+
         Number(
           a.orden || 999
         )
+
         -
+
         Number(
           b.orden || 999
         )
@@ -415,27 +1003,53 @@ async function cargarServiciosAdmin() {
     );
 
 
+    // ==================================================
+    // SIN SERVICIOS
+    // ==================================================
+
     if (
       servicios.length === 0
     ) {
 
-      listaServiciosAdmin.innerHTML = `
+      const mensaje =
+        document.createElement(
+          "div"
+        );
 
-                <div class="admin-sin-reservas">
 
-                    <h3>
-                        No existen servicios
-                    </h3>
+      mensaje.classList.add(
+        "admin-sin-reservas"
+      );
 
-                </div>
 
-            `;
+      const titulo =
+        document.createElement(
+          "h3"
+        );
+
+
+      titulo.textContent =
+        "No existen servicios";
+
+
+      mensaje.appendChild(
+        titulo
+      );
+
+
+      listaServiciosAdmin.appendChild(
+        mensaje
+      );
 
 
       return;
 
     }
 
+
+    // ==================================================
+    // MOSTRAR SERVICIOS
+    // ==================================================
 
     servicios.forEach(
       crearTarjetaServicio
@@ -459,7 +1073,7 @@ async function cargarServiciosAdmin() {
 
 
 // ==================================================
-// CREAR TARJETA
+// CREAR TARJETA DE SERVICIO
 // ==================================================
 
 function crearTarjetaServicio(
@@ -499,8 +1113,14 @@ function crearTarjetaServicio(
 
 
   titulo.textContent =
-    servicio.nombre;
+    servicio.nombre
+    ||
+    "Servicio";
 
+
+  // ==================================================
+  // ESTADO
+  // ==================================================
 
   const estado =
     document.createElement(
@@ -509,15 +1129,22 @@ function crearTarjetaServicio(
 
 
   estado.classList.add(
-    servicio.activo
+
+    servicio.activo !== false
+
       ? "servicio-estado-activo"
+
       : "servicio-estado-inactivo"
+
   );
 
 
   estado.textContent =
-    servicio.activo
+
+    servicio.activo !== false
+
       ? "Activo"
+
       : "Inactivo";
 
 
@@ -587,9 +1214,7 @@ function crearTarjetaServicio(
 
   for (
     let minutos = 30;
-
     minutos <= 360;
-
     minutos += 30
   ) {
 
@@ -600,7 +1225,9 @@ function crearTarjetaServicio(
 
 
     opcion.value =
-      minutos;
+      String(
+        minutos
+      );
 
 
     opcion.textContent =
@@ -636,7 +1263,7 @@ function crearTarjetaServicio(
 
 
   // ==================================================
-  // CHECKBOX "DESDE"
+  // PRECIO "DESDE"
   // ==================================================
 
   const desdeLabel =
@@ -682,7 +1309,7 @@ function crearTarjetaServicio(
 
 
   // ==================================================
-  // ACTIVO
+  // SERVICIO ACTIVO
   // ==================================================
 
   const activoLabel =
@@ -708,8 +1335,7 @@ function crearTarjetaServicio(
 
 
   activoCheckbox.checked =
-    servicio.activo
-    !== false;
+    servicio.activo !== false;
 
 
   const activoTexto =
@@ -752,7 +1378,7 @@ function crearTarjetaServicio(
 
 
   // ==================================================
-  // EVENTO GUARDAR
+  // GUARDAR CAMBIOS
   // ==================================================
 
   btnGuardar.addEventListener(
@@ -767,8 +1393,7 @@ function crearTarjetaServicio(
 
       const precio =
         Number(
-          campoPrecio.input
-            .value
+          campoPrecio.input.value
         );
 
 
@@ -777,6 +1402,10 @@ function crearTarjetaServicio(
           selectDuracion.value
         );
 
+
+      // ==========================================
+      // VALIDAR NOMBRE
+      // ==========================================
 
       if (
         nombre.length < 2
@@ -794,6 +1423,10 @@ function crearTarjetaServicio(
 
       }
 
+
+      // ==========================================
+      // VALIDAR PRECIO
+      // ==========================================
 
       if (
         !Number.isFinite(
@@ -816,7 +1449,15 @@ function crearTarjetaServicio(
       }
 
 
+      // ==========================================
+      // VALIDAR DURACIÓN
+      // ==========================================
+
       if (
+        !Number.isFinite(
+          duracion
+        )
+        ||
         duracion < 30
         ||
         duracion > 360
@@ -924,18 +1565,32 @@ function crearTarjetaServicio(
 
 
   formulario.append(
+
     campoNombre.contenedor,
+
     campoPrecio.contenedor,
+
     grupoDuracion,
+
     desdeLabel,
+
     activoLabel
+
   );
 
 
+  // ==================================================
+  // TARJETA COMPLETA
+  // ==================================================
+
   tarjeta.append(
+
     cabecera,
+
     formulario,
+
     btnGuardar
+
   );
 
 
@@ -947,7 +1602,7 @@ function crearTarjetaServicio(
 
 
 // ==================================================
-// CAMPO TEXTO
+// CREAR CAMPO TEXTO
 // ==================================================
 
 function crearCampoTexto(
@@ -990,6 +1645,10 @@ function crearCampoTexto(
     valor || "";
 
 
+  input.maxLength =
+    60;
+
+
   contenedor.append(
     label,
     input
@@ -1007,7 +1666,7 @@ function crearCampoTexto(
 
 
 // ==================================================
-// CAMPO NÚMERO
+// CREAR CAMPO NÚMERO
 // ==================================================
 
 function crearCampoNumero(
@@ -1077,12 +1736,31 @@ function crearCampoNumero(
 
 
 // ==================================================
-// DURACIÓN
+// FORMATEAR DURACIÓN
 // ==================================================
 
 function formatearDuracion(
   minutos
 ) {
+
+  minutos =
+    Number(
+      minutos
+    );
+
+
+  if (
+    !Number.isFinite(
+      minutos
+    )
+    ||
+    minutos <= 0
+  ) {
+
+    return "0 min";
+
+  }
+
 
   const horas =
     Math.floor(
@@ -1107,15 +1785,17 @@ function formatearDuracion(
     resto === 0
   ) {
 
-    return (
-      horas === 1
-        ? "1 hora"
-        : `${horas} horas`
-    );
+    return horas === 1
+
+      ? "1 hora"
+
+      : `${horas} horas`;
 
   }
 
 
-  return `${horas} h ${resto} min`;
+  return (
+    `${horas} h ${resto} min`
+  );
 
 }
