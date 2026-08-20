@@ -1,3 +1,8 @@
+// ==================================================
+// BONSAI
+// MIS RESERVAS - CLIENTA
+// ==================================================
+
 import { auth, db } from "./firebase-config.js";
 
 import {
@@ -17,38 +22,62 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ==========================================
-// ELEMENTOS HTML
-// ==========================================
+// ==================================================
+// CONFIGURACIÓN
+// ==================================================
 
-const estadoCarga =
-  document.getElementById("estadoCarga");
+const ESTILISTA_ID =
+  "javiera";
+
+const INTERVALO =
+  30;
+
+
+// ==================================================
+// VARIABLES
+// ==================================================
+
+let usuarioActual =
+  null;
+
+
+// ==================================================
+// ELEMENTOS HTML
+// ==================================================
 
 const proximasReservas =
-  document.getElementById("proximasReservas");
+  document.getElementById(
+    "proximasReservas"
+  );
+
 
 const historialReservas =
-  document.getElementById("historialReservas");
+  document.getElementById(
+    "historialReservas"
+  );
 
-const seccionProximas =
-  document.getElementById("seccionProximas");
 
-const seccionHistorial =
-  document.getElementById("seccionHistorial");
+const cargandoReservas =
+  document.getElementById(
+    "cargandoReservas"
+  );
 
-const saludoReservas =
-  document.getElementById("saludoReservas");
+
+const saludoUsuario =
+  document.getElementById(
+    "saludoUsuario"
+  );
+
 
 const btnCerrarSesion =
-  document.getElementById("btnCerrarSesion");
+  document.getElementById(
+    "btnCerrarSesion"
+  );
 
 
-let usuarioActual = null;
-
-
-// ==========================================
-// COMPROBAR SESIÓN
-// ==========================================
+// ==================================================
+// PROTEGER PÁGINA
+// ==================================================
 
 onAuthStateChanged(
   auth,
@@ -56,136 +85,154 @@ onAuthStateChanged(
 
     if (!usuario) {
 
-      alert(
-        "Debes iniciar sesión para ver tus reservas."
-      );
-
       window.location.href =
         "login.html";
 
       return;
-    }
-
-
-    usuarioActual = usuario;
-
-
-    // ==========================================
-    // OBTENER DATOS DEL CLIENTE
-    // ==========================================
-
-    try {
-
-      const referenciaUsuario =
-        doc(
-          db,
-          "usuarios",
-          usuario.uid
-        );
-
-
-      const documentoUsuario =
-        await getDoc(
-          referenciaUsuario
-        );
-
-
-      if (documentoUsuario.exists()) {
-
-        const datos =
-          documentoUsuario.data();
-
-
-        console.log(
-          "Datos del usuario:",
-          datos
-        );
-
-
-        saludoReservas.textContent =
-          `Hola, ${datos.nombre}. Consulta y administra tus horas en Bonsai.`;
-
-
-      } else {
-
-        console.log(
-          "No existe el documento del usuario en Firestore."
-        );
-
-
-        saludoReservas.textContent =
-          "Consulta y administra tus horas en Bonsai.";
-
-      }
-
-
-    } catch (error) {
-
-      console.error(
-        "Error obteniendo usuario:",
-        error
-      );
-
-
-      saludoReservas.textContent =
-        "Consulta y administra tus horas en Bonsai.";
 
     }
 
 
-    // ==========================================
-    // CARGAR RESERVAS
-    // ==========================================
+    usuarioActual =
+      usuario;
 
-    await cargarReservas();
+
+    await cargarNombreUsuario();
+
+
+    await cargarMisReservas();
 
   }
 );
 
 
-// ==========================================
-// CARGAR RESERVAS
-// ==========================================
+// ==================================================
+// CARGAR NOMBRE
+// ==================================================
 
-async function cargarReservas() {
+async function cargarNombreUsuario() {
 
-  estadoCarga.classList.remove(
-    "oculto"
-  );
+  if (!usuarioActual) {
 
+    return;
 
-  estadoCarga.textContent =
-    "Cargando tus reservas...";
-
-
-  proximasReservas.innerHTML = "";
-
-  historialReservas.innerHTML = "";
+  }
 
 
   try {
 
-    const consulta =
-      query(
-        collection(
+    const usuarioDoc =
+      await getDoc(
+        doc(
           db,
-          "reservas"
-        ),
-        where(
-          "usuarioId",
-          "==",
+          "usuarios",
           usuarioActual.uid
         )
       );
 
 
+    if (
+      usuarioDoc.exists()
+    ) {
+
+      const datos =
+        usuarioDoc.data();
+
+
+      const nombre =
+        datos.nombre
+        ||
+        usuarioActual.displayName
+        ||
+        "Cliente";
+
+
+      if (saludoUsuario) {
+
+        saludoUsuario.textContent =
+          `Hola, ${nombre}`;
+
+      }
+
+
+      return;
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando nombre:",
+      error
+    );
+
+  }
+
+
+  if (saludoUsuario) {
+
+    saludoUsuario.textContent =
+      usuarioActual.displayName
+        ? `Hola, ${usuarioActual.displayName}`
+        : "Hola";
+
+  }
+
+}
+
+
+// ==================================================
+// CARGAR RESERVAS
+// ==================================================
+
+async function cargarMisReservas() {
+
+  if (!usuarioActual) {
+
+    return;
+
+  }
+
+
+  proximasReservas.replaceChildren();
+
+  historialReservas.replaceChildren();
+
+
+  if (cargandoReservas) {
+
+    cargandoReservas.classList.remove(
+      "oculto"
+    );
+
+
+    cargandoReservas.textContent =
+      "Cargando tus reservas...";
+
+  }
+
+
+  try {
+
     const resultado =
       await getDocs(
-        consulta
+        query(
+          collection(
+            db,
+            "reservas"
+          ),
+          where(
+            "usuarioId",
+            "==",
+            usuarioActual.uid
+          )
+        )
       );
 
 
-    const reservas = [];
+    const reservas =
+      [];
 
 
     resultado.forEach(
@@ -193,7 +240,8 @@ async function cargarReservas() {
 
         reservas.push({
 
-          id: documento.id,
+          id:
+          documento.id,
 
           ...documento.data()
 
@@ -203,43 +251,37 @@ async function cargarReservas() {
     );
 
 
-    // Ordenar por fecha y hora
-
     reservas.sort(
-      (a, b) => {
-
-        const fechaA =
-          crearFechaReserva(a);
-
-        const fechaB =
-          crearFechaReserva(b);
-
-
-        return fechaA - fechaB;
-
-      }
+      ordenarReservasMasRecientes
     );
 
 
-    const futuras = [];
+    const proximas =
+      [];
 
-    const historial = [];
+
+    const historial =
+      [];
 
 
     reservas.forEach(
       (reserva) => {
 
         if (
-          reserva.estado === "confirmada"
-          &&
-          esReservaFutura(reserva)
+          esReservaProxima(
+            reserva
+          )
         ) {
 
-          futuras.push(reserva);
+          proximas.push(
+            reserva
+          );
 
         } else {
 
-          historial.push(reserva);
+          historial.push(
+            reserva
+          );
 
         }
 
@@ -247,18 +289,26 @@ async function cargarReservas() {
     );
 
 
-    estadoCarga.classList.add(
-      "oculto"
+    if (cargandoReservas) {
+
+      cargandoReservas.classList.add(
+        "oculto"
+      );
+
+    }
+
+
+    mostrarGrupoReservas(
+      proximas,
+      proximasReservas,
+      true
     );
 
 
-    mostrarProximas(
-      futuras
-    );
-
-
-    mostrarHistorial(
-      historial
+    mostrarGrupoReservas(
+      historial,
+      historialReservas,
+      false
     );
 
 
@@ -270,43 +320,67 @@ async function cargarReservas() {
     );
 
 
-    estadoCarga.textContent =
-      "No fue posible cargar tus reservas.";
+    if (cargandoReservas) {
+
+      cargandoReservas.textContent =
+        "No fue posible cargar tus reservas.";
+
+    }
 
   }
 
 }
 
 
-// ==========================================
-// MOSTRAR PRÓXIMAS
-// ==========================================
+// ==================================================
+// MOSTRAR GRUPO
+// ==================================================
 
-function mostrarProximas(
-  reservas
+function mostrarGrupoReservas(
+  reservas,
+  contenedor,
+  esProxima
 ) {
 
-  proximasReservas.innerHTML = "";
+  contenedor.replaceChildren();
 
 
-  if (reservas.length === 0) {
+  if (
+    reservas.length === 0
+  ) {
 
-    proximasReservas.innerHTML = `
-            <div class="sin-reservas">
+    const vacio =
+      document.createElement(
+        "div"
+      );
 
-                <p>
-                    No tienes próximas reservas.
-                </p>
 
-                <a
-                    href="agenda.html"
-                    class="btn-principal"
-                >
-                    Agendar una hora
-                </a>
+    vacio.classList.add(
+      "sin-reservas"
+    );
 
-            </div>
-        `;
+
+    const texto =
+      document.createElement(
+        "p"
+      );
+
+
+    texto.textContent =
+      esProxima
+        ? "No tienes próximas reservas."
+        : "Todavía no tienes reservas en tu historial.";
+
+
+    vacio.appendChild(
+      texto
+    );
+
+
+    contenedor.appendChild(
+      vacio
+    );
+
 
     return;
 
@@ -316,10 +390,10 @@ function mostrarProximas(
   reservas.forEach(
     (reserva) => {
 
-      proximasReservas.appendChild(
+      contenedor.appendChild(
         crearTarjetaReserva(
           reserva,
-          true
+          esProxima
         )
       );
 
@@ -329,62 +403,13 @@ function mostrarProximas(
 }
 
 
-// ==========================================
-// MOSTRAR HISTORIAL
-// ==========================================
-
-function mostrarHistorial(
-  reservas
-) {
-
-  historialReservas.innerHTML = "";
-
-
-  if (reservas.length === 0) {
-
-    historialReservas.innerHTML = `
-            <div class="sin-reservas">
-
-                <p>
-                    Aún no tienes reservas anteriores.
-                </p>
-
-            </div>
-        `;
-
-    return;
-
-  }
-
-
-  // Más recientes primero
-
-  reservas.reverse();
-
-
-  reservas.forEach(
-    (reserva) => {
-
-      historialReservas.appendChild(
-        crearTarjetaReserva(
-          reserva,
-          false
-        )
-      );
-
-    }
-  );
-
-}
-
-
-// ==========================================
+// ==================================================
 // CREAR TARJETA
-// ==========================================
+// ==================================================
 
 function crearTarjetaReserva(
   reserva,
-  permitirCancelar
+  esProxima
 ) {
 
   const tarjeta =
@@ -398,166 +423,320 @@ function crearTarjetaReserva(
   );
 
 
-  // Fecha bonita
+  // ==================================================
+  // CABECERA
+  // ==================================================
+
+  const cabecera =
+    document.createElement(
+      "div"
+    );
+
+
+  cabecera.classList.add(
+    "reserva-card-header"
+  );
+
+
+  const tituloContenedor =
+    document.createElement(
+      "div"
+    );
+
 
   const fecha =
-    crearFechaLocal(
+    document.createElement(
+      "span"
+    );
+
+
+  fecha.classList.add(
+    "reserva-fecha"
+  );
+
+
+  fecha.textContent =
+    formatearFecha(
       reserva.fecha
     );
 
 
-  const fechaTexto =
-    fecha.toLocaleDateString(
-      "es-CL",
-      {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      }
+  const servicio =
+    document.createElement(
+      "h3"
     );
 
 
-  // Precio
+  servicio.textContent =
+    reserva.servicioNombre
+    ||
+    "Servicio";
 
-  const precioFormateado =
-    new Intl.NumberFormat(
-      "es-CL",
-      {
-        style: "currency",
-        currency: "CLP",
-        maximumFractionDigits: 0
-      }
-    ).format(
-      reserva.precio
+
+  tituloContenedor.append(
+    fecha,
+    servicio
+  );
+
+
+  const estadoVisual =
+    obtenerEstadoVisual(
+      reserva
     );
 
 
-  const precioTexto =
-    reserva.precioDesde
-      ? `Desde ${precioFormateado}`
-      : precioFormateado;
+  const estado =
+    document.createElement(
+      "span"
+    );
 
 
-  // Estado visual
+  estado.classList.add(
+    "estado-reserva",
+    estadoVisual.clase
+  );
 
-  let estadoTexto =
-    "Confirmada";
+
+  estado.textContent =
+    estadoVisual.texto;
 
 
-  let claseEstado =
-    "estado-confirmada";
+  cabecera.append(
+    tituloContenedor,
+    estado
+  );
 
+
+  // ==================================================
+  // DATOS
+  // ==================================================
+
+  const datos =
+    document.createElement(
+      "div"
+    );
+
+
+  datos.classList.add(
+    "reserva-datos"
+  );
+
+
+  datos.append(
+
+    crearDatoReserva(
+      "Horario",
+      `${reserva.horaInicio || "--:--"} - ${reserva.horaFin || "--:--"}`
+    ),
+
+    crearDatoReserva(
+      "Profesional",
+      reserva.estilistaNombre
+      ||
+      "Javii"
+    ),
+
+    crearDatoReserva(
+      "Duración",
+      formatearDuracion(
+        reserva.duracionMinutos
+      )
+    ),
+
+    crearDatoReserva(
+      "Valor",
+      formatearPrecio(
+        reserva.precio,
+        reserva.precioDesde
+      )
+    )
+
+  );
+
+
+  tarjeta.append(
+    cabecera,
+    datos
+  );
+
+
+  // ==================================================
+  // MENSAJE PENDIENTE
+  // ==================================================
 
   if (
-    reserva.estado === "cancelada"
+    reserva.estado === "pendiente"
   ) {
 
-    estadoTexto =
-      "Cancelada";
-
-    claseEstado =
-      "estado-cancelada";
-
-  } else if (
-    !esReservaFutura(reserva)
-  ) {
-
-    estadoTexto =
-      "Finalizada";
-
-    claseEstado =
-      "estado-finalizada";
+    tarjeta.appendChild(
+      crearAviso(
+        "Tu solicitud está pendiente de confirmación por Javii.",
+        "reserva-aviso-pendiente"
+      )
+    );
 
   }
 
 
-  tarjeta.innerHTML = `
-
-        <div class="reserva-card-header">
-
-            <div>
-
-                <span class="reserva-fecha">
-                    ${capitalizar(fechaTexto)}
-                </span>
-
-                <h3>
-                    ${reserva.servicioNombre}
-                </h3>
-
-            </div>
-
-
-            <span class="estado-reserva ${claseEstado}">
-                ${estadoTexto}
-            </span>
-
-        </div>
-
-
-        <div class="reserva-datos">
-
-            <div>
-
-                <span>Estilista</span>
-
-                <strong>
-                    ${reserva.estilistaNombre}
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>Horario</span>
-
-                <strong>
-                    ${reserva.horaInicio}
-                    -
-                    ${reserva.horaFin}
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>Duración</span>
-
-                <strong>
-                    ${formatearDuracion(
-    reserva.duracionMinutos
-  )}
-                </strong>
-
-            </div>
-
-
-            <div>
-
-                <span>Valor</span>
-
-                <strong>
-                    ${precioTexto}
-                </strong>
-
-            </div>
-
-        </div>
-
-    `;
-
-
-  // ======================================
-  // BOTÓN CANCELAR
-  // ======================================
+  // ==================================================
+  // CAMBIO SOLICITADO
+  // ==================================================
 
   if (
-    permitirCancelar
+    reserva.estado === "cambio_solicitado"
+  ) {
+
+    const texto =
+      reserva.motivoCambio
+
+        ? `Javii necesita coordinar un cambio contigo: ${reserva.motivoCambio}`
+
+        : "Javii necesita coordinar un cambio de horario contigo.";
+
+
+    tarjeta.appendChild(
+      crearAviso(
+        texto,
+        "reserva-aviso-cambio"
+      )
+    );
+
+  }
+
+
+  // ==================================================
+  // REAGENDADA
+  // ==================================================
+
+  if (
+    reserva.estado === "reagendada"
+  ) {
+
+    const contenedor =
+      document.createElement(
+        "div"
+      );
+
+
+    contenedor.classList.add(
+      "reserva-reagendada-info"
+    );
+
+
+    const titulo =
+      document.createElement(
+        "strong"
+      );
+
+
+    titulo.textContent =
+      "Reserva reagendada";
+
+
+    contenedor.appendChild(
+      titulo
+    );
+
+
+    if (
+      reserva.fechaAnterior
+      &&
+      reserva.horaInicioAnterior
+    ) {
+
+      const anterior =
+        document.createElement(
+          "span"
+        );
+
+
+      anterior.textContent =
+        `Horario anterior: ${formatearFechaCorta(reserva.fechaAnterior)} · ${reserva.horaInicioAnterior} - ${reserva.horaFinAnterior || ""}`;
+
+
+      contenedor.appendChild(
+        anterior
+      );
+
+    }
+
+
+    const nuevo =
+      document.createElement(
+        "span"
+      );
+
+
+    nuevo.textContent =
+      `Nuevo horario: ${formatearFechaCorta(reserva.fecha)} · ${reserva.horaInicio} - ${reserva.horaFin}`;
+
+
+    contenedor.appendChild(
+      nuevo
+    );
+
+
+    tarjeta.appendChild(
+      contenedor
+    );
+
+  }
+
+
+  // ==================================================
+  // CANCELADA POR BONSAI
+  // ==================================================
+
+  if (
+    reserva.estado === "cancelada_admin"
+  ) {
+
+    const texto =
+      reserva.motivoCancelacion
+
+        ? `Bonsai canceló esta reserva. Motivo: ${reserva.motivoCancelacion}`
+
+        : "Bonsai canceló esta reserva.";
+
+
+    tarjeta.appendChild(
+      crearAviso(
+        texto,
+        "reserva-aviso-cancelada"
+      )
+    );
+
+  }
+
+
+  // ==================================================
+  // CANCELADA POR CLIENTA
+  // ==================================================
+
+  if (
+    reserva.estado === "cancelada_cliente"
+  ) {
+
+    tarjeta.appendChild(
+      crearAviso(
+        "Cancelaste esta reserva.",
+        "reserva-aviso-cancelada"
+      )
+    );
+
+  }
+
+
+  // ==================================================
+  // ACCIONES
+  // ==================================================
+
+  if (
+    esProxima
     &&
-    reserva.estado === "confirmada"
+    puedeCancelarReserva(
+      reserva
+    )
   ) {
 
     const acciones =
@@ -571,93 +750,40 @@ function crearTarjetaReserva(
     );
 
 
-    const botonCancelar =
+    const cancelar =
       document.createElement(
         "button"
       );
 
 
-    botonCancelar.type =
+    cancelar.type =
       "button";
 
 
-    botonCancelar.classList.add(
+    cancelar.classList.add(
       "btn-cancelar-reserva"
     );
 
 
-    botonCancelar.textContent =
+    cancelar.textContent =
       "Cancelar reserva";
 
 
-    botonCancelar.addEventListener(
+    cancelar.addEventListener(
       "click",
       async () => {
 
-        const confirmar =
-          confirm(
-            `¿Seguro que deseas cancelar tu reserva de ${reserva.servicioNombre}?`
-          );
-
-
-        if (!confirmar) {
-
-          return;
-
-        }
-
-
-        botonCancelar.disabled =
-          true;
-
-
-        botonCancelar.textContent =
-          "Cancelando...";
-
-
-        try {
-
-          await cancelarReserva(
-            reserva
-          );
-
-
-          alert(
-            "Tu reserva fue cancelada correctamente."
-          );
-
-
-          await cargarReservas();
-
-
-        } catch (error) {
-
-          console.error(
-            "Error cancelando reserva:",
-            error
-          );
-
-
-          alert(
-            "No fue posible cancelar la reserva."
-          );
-
-
-          botonCancelar.disabled =
-            false;
-
-
-          botonCancelar.textContent =
-            "Cancelar reserva";
-
-        }
+        await solicitarCancelacion(
+          reserva,
+          cancelar
+        );
 
       }
     );
 
 
     acciones.appendChild(
-      botonCancelar
+      cancelar
     );
 
 
@@ -673,11 +799,174 @@ function crearTarjetaReserva(
 }
 
 
-// ==========================================
-// CANCELAR RESERVA
-// ==========================================
+// ==================================================
+// CREAR DATO
+// ==================================================
 
-async function cancelarReserva(
+function crearDatoReserva(
+  etiqueta,
+  valor
+) {
+
+  const contenedor =
+    document.createElement(
+      "div"
+    );
+
+
+  const label =
+    document.createElement(
+      "span"
+    );
+
+
+  label.textContent =
+    etiqueta;
+
+
+  const texto =
+    document.createElement(
+      "strong"
+    );
+
+
+  texto.textContent =
+    valor;
+
+
+  contenedor.append(
+    label,
+    texto
+  );
+
+
+  return contenedor;
+
+}
+
+
+// ==================================================
+// CREAR AVISO
+// ==================================================
+
+function crearAviso(
+  texto,
+  clase
+) {
+
+  const aviso =
+    document.createElement(
+      "div"
+    );
+
+
+  aviso.classList.add(
+    "reserva-aviso",
+    clase
+  );
+
+
+  aviso.textContent =
+    texto;
+
+
+  return aviso;
+
+}
+
+
+// ==================================================
+// SOLICITAR CANCELACIÓN
+// ==================================================
+
+async function solicitarCancelacion(
+  reserva,
+  boton
+) {
+
+  const confirmar =
+    confirm(
+      `¿Seguro que deseas cancelar tu reserva de ${reserva.servicioNombre || "este servicio"} para el ${formatearFecha(reserva.fecha)} a las ${reserva.horaInicio}?`
+    );
+
+
+  if (!confirmar) {
+
+    return;
+
+  }
+
+
+  boton.disabled =
+    true;
+
+
+  boton.textContent =
+    "Cancelando...";
+
+
+  try {
+
+    await cancelarReservaCliente(
+      reserva
+    );
+
+
+    alert(
+      "Tu reserva fue cancelada y el horario quedó disponible nuevamente."
+    );
+
+
+    await cargarMisReservas();
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cancelando reserva:",
+      error
+    );
+
+
+    if (
+      error.message ===
+      "reserva-ya-cancelada"
+    ) {
+
+      alert(
+        "Esta reserva ya había sido cancelada."
+      );
+
+
+      await cargarMisReservas();
+
+
+    } else {
+
+      alert(
+        "No fue posible cancelar la reserva."
+      );
+
+
+      boton.disabled =
+        false;
+
+
+      boton.textContent =
+        "Cancelar reserva";
+
+    }
+
+  }
+
+}
+
+
+// ==================================================
+// CANCELAR RESERVA CLIENTA
+// ==================================================
+
+async function cancelarReservaCliente(
   reserva
 ) {
 
@@ -689,45 +978,13 @@ async function cancelarReserva(
     );
 
 
-  // ======================================
-  // OBTENER BLOQUES DE LA RESERVA
-  // ======================================
-
-  const slotRefs = [];
-
-
-  for (
-    let minuto =
-      reserva.inicioMinutos;
-
-    minuto <
-    reserva.finMinutos;
-
-    minuto += 30
-  ) {
-
-    const idSlot =
-      `${reserva.fecha}_${reserva.estilistaId}_${minuto}`;
-
-
-    slotRefs.push(
-      doc(
-        db,
-        "agendaSlots",
-        idSlot
-      )
-    );
-
-  }
-
-
-  // ======================================
-  // TRANSACCIÓN
-  // ======================================
-
   await runTransaction(
     db,
     async (transaction) => {
+
+      // ======================================
+      // LEER RESERVA ACTUAL
+      // ======================================
 
       const reservaDoc =
         await transaction.get(
@@ -750,7 +1007,9 @@ async function cancelarReserva(
         reservaDoc.data();
 
 
-      // Seguridad adicional
+      // ======================================
+      // SEGURIDAD CLIENTA
+      // ======================================
 
       if (
         datos.usuarioId
@@ -765,8 +1024,9 @@ async function cancelarReserva(
 
 
       if (
-        datos.estado
-        !== "confirmada"
+        datos.estado === "cancelada_admin"
+        ||
+        datos.estado === "cancelada_cliente"
       ) {
 
         throw new Error(
@@ -776,44 +1036,98 @@ async function cancelarReserva(
       }
 
 
-      // ==================================
-      // LEER TODOS LOS BLOQUES
-      // ==================================
+      if (
+        !estadoCancelable(
+          datos.estado
+        )
+      ) {
 
-      const slotsDocumentos = [];
-
-
-      for (
-        const slotRef
-        of slotRefs
-        ) {
-
-        const slotDoc =
-          await transaction.get(
-            slotRef
-          );
-
-
-        slotsDocumentos.push(
-          {
-            ref: slotRef,
-            doc: slotDoc
-          }
+        throw new Error(
+          "estado-no-cancelable"
         );
 
       }
 
 
-      // ==================================
-      // CAMBIAR ESTADO
-      // ==================================
+      // ======================================
+      // GENERAR SLOTS REALES
+      // ======================================
+
+      const referenciasSlots =
+        [];
+
+
+      for (
+        let minuto =
+          Number(
+            datos.inicioMinutos
+          );
+
+        minuto <
+        Number(
+          datos.finMinutos
+        );
+
+        minuto += INTERVALO
+      ) {
+
+        referenciasSlots.push(
+          doc(
+            db,
+            "agendaSlots",
+            `${datos.fecha}_${ESTILISTA_ID}_${minuto}`
+          )
+        );
+
+      }
+
+
+      // ======================================
+      // TODAS LAS LECTURAS PRIMERO
+      // ======================================
+
+      const documentosSlots =
+        [];
+
+
+      for (
+        const referencia
+        of referenciasSlots
+        ) {
+
+        documentosSlots.push({
+
+          ref:
+          referencia,
+
+          snap:
+            await transaction.get(
+              referencia
+            )
+
+        });
+
+      }
+
+
+      // ======================================
+      // ACTUALIZAR RESERVA
+      // ======================================
+      //
+      // Importante:
+      // Las reglas actuales permiten solamente
+      // estos tres campos para cancelación cliente.
+      // ==================================================
 
       transaction.update(
         reservaRef,
         {
 
           estado:
-            "cancelada",
+            "cancelada_cliente",
+
+          canceladaPor:
+            "cliente",
 
           fechaCancelacion:
             serverTimestamp()
@@ -822,22 +1136,22 @@ async function cancelarReserva(
       );
 
 
-      // ==================================
-      // LIBERAR HORAS
-      // ==================================
+      // ======================================
+      // LIBERAR SLOTS
+      // ======================================
 
-      slotsDocumentos.forEach(
-        (slot) => {
+      documentosSlots.forEach(
+        (item) => {
 
           if (
-            slot.doc.exists()
+            item.snap.exists()
             &&
-            slot.doc.data().reservaId
+            item.snap.data().reservaId
             === reserva.id
           ) {
 
             transaction.delete(
-              slot.ref
+              item.ref
             );
 
           }
@@ -851,64 +1165,425 @@ async function cancelarReserva(
 }
 
 
-// ==========================================
-// COMPROBAR SI ES FUTURA
-// ==========================================
+// ==================================================
+// ESTADO CANCELABLE
+// ==================================================
 
-function esReservaFutura(
-  reserva
+function estadoCancelable(
+  estado
 ) {
 
-  const fechaReserva =
-    crearFechaReserva(
-      reserva
-    );
+  return [
 
+    "pendiente",
+    "confirmada",
+    "cambio_solicitado",
+    "reagendada"
 
-  return (
-    fechaReserva >
-    new Date()
+  ].includes(
+    estado
   );
 
 }
 
 
-// ==========================================
-// CREAR FECHA CON HORA
-// ==========================================
+// ==================================================
+// PUEDE CANCELAR
+// ==================================================
 
-function crearFechaReserva(
+function puedeCancelarReserva(
   reserva
 ) {
 
-  const partesFecha =
-    reserva.fecha.split("-");
+  if (
+    !estadoCancelable(
+      reserva.estado
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  if (
+    !reserva.fecha
+  ) {
+
+    return false;
+
+  }
+
+
+  return !reservaYaPaso(
+    reserva
+  );
+
+}
+
+
+// ==================================================
+// ESTADO VISUAL
+// ==================================================
+
+function obtenerEstadoVisual(
+  reserva
+) {
+
+  if (
+    !esReservaCancelada(
+      reserva
+    )
+    &&
+    reservaYaPaso(
+      reserva
+    )
+  ) {
+
+    return {
+
+      texto:
+        "Finalizada",
+
+      clase:
+        "estado-finalizada"
+
+    };
+
+  }
+
+
+  switch (
+    reserva.estado
+    ) {
+
+    case "pendiente":
+
+      return {
+
+        texto:
+          "Pendiente",
+
+        clase:
+          "estado-pendiente"
+
+      };
+
+
+    case "confirmada":
+
+      return {
+
+        texto:
+          "Confirmada",
+
+        clase:
+          "estado-confirmada"
+
+      };
+
+
+    case "cambio_solicitado":
+
+      return {
+
+        texto:
+          "Cambio solicitado",
+
+        clase:
+          "estado-cambio"
+
+      };
+
+
+    case "reagendada":
+
+      return {
+
+        texto:
+          "Reagendada",
+
+        clase:
+          "estado-reagendada"
+
+      };
+
+
+    case "cancelada_admin":
+
+      return {
+
+        texto:
+          "Cancelada por Bonsai",
+
+        clase:
+          "estado-cancelada"
+
+      };
+
+
+    case "cancelada_cliente":
+
+      return {
+
+        texto:
+          "Cancelada por ti",
+
+        clase:
+          "estado-cancelada"
+
+      };
+
+
+    default:
+
+      return {
+
+        texto:
+          reserva.estado
+          ||
+          "Sin estado",
+
+        clase:
+          "estado-finalizada"
+
+      };
+
+  }
+
+}
+
+
+// ==================================================
+// PRÓXIMA O HISTORIAL
+// ==================================================
+
+function esReservaProxima(
+  reserva
+) {
+
+  if (
+    esReservaCancelada(
+      reserva
+    )
+  ) {
+
+    return false;
+
+  }
+
+
+  return !reservaYaPaso(
+    reserva
+  );
+
+}
+
+
+// ==================================================
+// ¿YA PASÓ?
+// ==================================================
+
+function reservaYaPaso(
+  reserva
+) {
+
+  if (
+    !reserva.fecha
+    ||
+    !reserva.horaFin
+  ) {
+
+    return false;
+
+  }
+
+
+  const fecha =
+    crearFechaLocal(
+      reserva.fecha
+    );
 
 
   const partesHora =
-    reserva.horaInicio.split(":");
+    String(
+      reserva.horaFin
+    ).split(":");
+
+
+  fecha.setHours(
+    Number(
+      partesHora[0] || 0
+    ),
+    Number(
+      partesHora[1] || 0
+    ),
+    0,
+    0
+  );
+
+
+  return (
+    fecha.getTime()
+    <
+    Date.now()
+  );
+
+}
+
+
+// ==================================================
+// CANCELADA
+// ==================================================
+
+function esReservaCancelada(
+  reserva
+) {
+
+  return (
+    reserva.estado === "cancelada_admin"
+    ||
+    reserva.estado === "cancelada_cliente"
+  );
+
+}
+
+
+// ==================================================
+// ORDEN
+// ==================================================
+
+function ordenarReservasMasRecientes(
+  a,
+  b
+) {
+
+  const fechaA =
+    `${a.fecha || ""}-${String(
+      a.inicioMinutos || 0
+    ).padStart(
+      4,
+      "0"
+    )}`;
+
+
+  const fechaB =
+    `${b.fecha || ""}-${String(
+      b.inicioMinutos || 0
+    ).padStart(
+      4,
+      "0"
+    )}`;
+
+
+  return fechaB.localeCompare(
+    fechaA
+  );
+
+}
+
+
+// ==================================================
+// FORMATEAR FECHA
+// ==================================================
+
+function formatearFecha(
+  fechaTexto
+) {
+
+  if (!fechaTexto) {
+
+    return "Sin fecha";
+
+  }
+
+
+  return crearFechaLocal(
+    fechaTexto
+  ).toLocaleDateString(
+    "es-CL",
+    {
+
+      weekday:
+        "long",
+
+      day:
+        "2-digit",
+
+      month:
+        "long",
+
+      year:
+        "numeric"
+
+    }
+  );
+
+}
+
+
+// ==================================================
+// FECHA CORTA
+// ==================================================
+
+function formatearFechaCorta(
+  fechaTexto
+) {
+
+  if (!fechaTexto) {
+
+    return "Sin fecha";
+
+  }
+
+
+  return crearFechaLocal(
+    fechaTexto
+  ).toLocaleDateString(
+    "es-CL",
+    {
+
+      day:
+        "2-digit",
+
+      month:
+        "short",
+
+      year:
+        "numeric"
+
+    }
+  );
+
+}
+
+
+// ==================================================
+// CREAR FECHA LOCAL
+// ==================================================
+
+function crearFechaLocal(
+  fechaTexto
+) {
+
+  const partes =
+    String(
+      fechaTexto
+    ).split("-");
 
 
   return new Date(
 
     Number(
-      partesFecha[0]
+      partes[0]
     ),
 
     Number(
-      partesFecha[1]
+      partes[1]
     ) - 1,
 
     Number(
-      partesFecha[2]
-    ),
-
-    Number(
-      partesHora[0]
-    ),
-
-    Number(
-      partesHora[1]
+      partes[2]
     )
 
   );
@@ -916,38 +1591,28 @@ function crearFechaReserva(
 }
 
 
-// ==========================================
-// CREAR FECHA LOCAL
-// ==========================================
-
-function crearFechaLocal(
-  fechaTexto
-) {
-
-  const partes =
-    fechaTexto.split("-");
-
-
-  return new Date(
-
-    Number(partes[0]),
-
-    Number(partes[1]) - 1,
-
-    Number(partes[2])
-
-  );
-
-}
-
-
-// ==========================================
+// ==================================================
 // DURACIÓN
-// ==========================================
+// ==================================================
 
 function formatearDuracion(
   minutos
 ) {
+
+  minutos =
+    Number(
+      minutos || 0
+    );
+
+
+  if (
+    minutos <= 0
+  ) {
+
+    return "Sin duración";
+
+  }
+
 
   const horas =
     Math.floor(
@@ -955,12 +1620,21 @@ function formatearDuracion(
     );
 
 
-  const minutosRestantes =
+  const resto =
     minutos % 60;
 
 
   if (
-    minutosRestantes === 0
+    horas === 0
+  ) {
+
+    return `${resto} min`;
+
+  }
+
+
+  if (
+    resto === 0
   ) {
 
     return (
@@ -972,62 +1646,96 @@ function formatearDuracion(
   }
 
 
-  return (
-    `${horas} h ${minutosRestantes} min`
-  );
+  return `${horas} h ${resto} min`;
 
 }
 
 
-// ==========================================
-// CAPITALIZAR TEXTO
-// ==========================================
+// ==================================================
+// PRECIO
+// ==================================================
 
-function capitalizar(
-  texto
+function formatearPrecio(
+  precio,
+  desde
 ) {
 
-  if (!texto) {
-    return "";
+  if (
+    precio === undefined
+    ||
+    precio === null
+  ) {
+
+    return "Sin valor";
+
   }
 
 
-  return (
-    texto.charAt(0).toUpperCase()
-    +
-    texto.slice(1)
-  );
+  const valor =
+    new Intl.NumberFormat(
+      "es-CL",
+      {
+
+        style:
+          "currency",
+
+        currency:
+          "CLP",
+
+        maximumFractionDigits:
+          0
+
+      }
+    ).format(
+      Number(
+        precio
+      )
+    );
+
+
+  return desde
+    ? `Desde ${valor}`
+    : valor;
 
 }
 
 
-// ==========================================
+// ==================================================
 // CERRAR SESIÓN
-// ==========================================
+// ==================================================
 
-btnCerrarSesion.addEventListener(
-  "click",
-  async () => {
+if (btnCerrarSesion) {
 
-    try {
+  btnCerrarSesion.addEventListener(
+    "click",
+    async () => {
 
-      await signOut(
-        auth
-      );
+      try {
 
-
-      window.location.href =
-        "index.html";
+        await signOut(
+          auth
+        );
 
 
-    } catch (error) {
+        window.location.href =
+          "login.html";
 
-      console.error(
-        "Error cerrando sesión:",
-        error
-      );
+
+      } catch (error) {
+
+        console.error(
+          "Error cerrando sesión:",
+          error
+        );
+
+
+        alert(
+          "No fue posible cerrar la sesión."
+        );
+
+      }
 
     }
+  );
 
-  }
-);
+}

@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>Panel administrativo | Bonsai</title>
+
+  <!-- ESTILOS GENERALES DE BONSAI -->
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+
+  <!-- ESTILOS EXCLUSIVOS DEL PANEL -->
+  <link
+    rel="stylesheet"
+    href="css/admin.css"
+  >
+
+</head>
+
+
+<body class="pagina-admin">
+
+
+<!-- ==================================================
+     HEADER
+================================================== -->
+
+<header class="admin-header">
+
+  <a
+    href="admin.html"
+    class="admin-logo"
+  >
+    Bonsai
+  </a>
+
+
+  <div class="admin-header-derecha">
+
+    <div class="admin-usuario">
+
+            <span class="admin-usuario-cargo">
+                Administración
+            </span>
+
+      <strong>
+        Javii
+      </strong>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn-admin-salir"
+      id="btnCerrarSesion"
+    >
+      Cerrar sesión
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- ==================================================
+     CONTENIDO PRINCIPAL
+================================================== -->
+
+<main class="admin-main">
+
+  <div class="admin-contenedor">
+
+
+    <!-- ==================================================
+         BIENVENIDA
+    ================================================== -->
+
+    <section class="admin-encabezado">
+
+      <p class="admin-subtitulo">
+        PANEL ADMINISTRATIVO
+      </p>
+
+      <h1>
+        Hola, Javii
+      </h1>
+
+      <p class="admin-descripcion">
+        Administra las solicitudes, reservas y horarios de Bonsai.
+      </p>
+
+    </section>
+
+
+    <!-- ==================================================
+         ESTADÍSTICAS
+    ================================================== -->
+
+    <section class="admin-estadisticas">
+
+
+      <article class="admin-estadistica">
+
+                <span>
+                    Solicitudes por gestionar
+                </span>
+
+        <strong id="reservasPendientes">
+          0
+        </strong>
+
+      </article>
+
+
+      <article class="admin-estadistica">
+
+                <span>
+                    Reservas de hoy
+                </span>
+
+        <strong id="reservasHoy">
+          0
+        </strong>
+
+      </article>
+
+
+      <article class="admin-estadistica">
+
+                <span>
+                    Próximas reservas
+                </span>
+
+        <strong id="reservasProximas">
+          0
+        </strong>
+
+      </article>
+
+
+      <article class="admin-estadistica">
+
+                <span>
+                    Clientes registrados
+                </span>
+
+        <strong id="clientesRegistrados">
+          0
+        </strong>
+
+      </article>
+
+
+    </section>
+
+
+    <!-- ==================================================
+         MENÚ
+    ================================================== -->
+
+    <nav class="admin-menu">
+
+      <button
+        type="button"
+        class="admin-menu-btn activo"
+        data-seccion="solicitudes"
+      >
+        Solicitudes
+      </button>
+
+
+      <button
+        type="button"
+        class="admin-menu-btn"
+        data-seccion="agenda"
+      >
+        Agenda
+      </button>
+
+
+      <button
+        type="button"
+        class="admin-menu-btn"
+        data-seccion="calendario"
+      >
+        Calendario
+      </button>
+
+
+      <button
+        type="button"
+        class="admin-menu-btn"
+        data-seccion="bloqueos"
+      >
+        Bloquear horarios
+      </button>
+
+
+      <button
+        type="button"
+        class="admin-menu-btn"
+        data-seccion="servicios"
+      >
+        Servicios
+      </button>
+
+
+      <button
+        type="button"
+        class="admin-menu-btn"
+        data-seccion="clientes"
+      >
+        Clientes
+      </button>
+
+    </nav>
+
+
+    <!-- ==================================================
+         SOLICITUDES
+    ================================================== -->
+
+    <section
+      class="admin-seccion"
+      id="seccionSolicitudes"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            SOLICITUDES
+          </p>
+
+          <h2>
+            Horas por gestionar
+          </h2>
+
+          <p>
+            Revisa las solicitudes nuevas y los cambios pendientes.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <p
+        class="estado-carga"
+        id="cargandoSolicitudes"
+      >
+        Cargando solicitudes...
+      </p>
+
+
+      <div
+        class="admin-lista-reservas"
+        id="listaSolicitudes"
+      >
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         AGENDA
+    ================================================== -->
+
+    <section
+      class="admin-seccion oculto"
+      id="seccionAgenda"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            AGENDA
+          </p>
+
+          <h2>
+            Agenda del día
+          </h2>
+
+          <p>
+            Revisa las reservas correspondientes a una fecha.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="admin-filtros">
+
+        <div class="admin-campo-fecha">
+
+          <label for="fechaAdmin">
+            Seleccionar fecha
+          </label>
+
+          <input
+            type="date"
+            id="fechaAdmin"
+          >
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn-principal"
+          id="btnHoy"
+        >
+          Hoy
+        </button>
+
+      </div>
+
+
+      <h3
+        class="admin-fecha-titulo"
+        id="tituloFechaAgenda"
+      >
+      </h3>
+
+      <!-- ==================================================
+     AGENDA VISUAL DEL DÍA
+================================================== -->
+
+      <div class="agenda-visual-card">
+
+        <div class="agenda-visual-cabecera">
+
+          <div>
+
+            <p class="admin-subtitulo">
+              VISTA DEL DÍA
+            </p>
+
+            <h3 id="agendaVisualTitulo">
+              Agenda
+            </h3>
+
+            <p
+              class="agenda-visual-resumen"
+              id="agendaVisualResumen"
+            >
+            </p>
+
+          </div>
+
+
+          <div class="agenda-visual-leyenda">
+
+            <span>
+                <i class="agenda-leyenda-reserva"></i>
+                Reserva
+            </span>
+
+            <span>
+                <i class="agenda-leyenda-bloqueo"></i>
+                Bloqueo
+            </span>
+
+            <span>
+                <i class="agenda-leyenda-libre"></i>
+                Libre
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <p
+          class="estado-carga"
+          id="cargandoAgendaVisual"
+        >
+          Cargando agenda...
+        </p>
+
+
+        <div
+          class="agenda-visual-dia oculto"
+          id="agendaVisualDia"
+        >
+
+          <div
+            class="agenda-visual-horas"
+            id="agendaVisualHoras"
+          >
+          </div>
+
+
+          <div
+            class="agenda-visual-cuerpo"
+            id="agendaVisualCuerpo"
+          >
+
+            <div
+              class="agenda-visual-lineas"
+              id="agendaVisualLineas"
+            >
+            </div>
+
+
+            <div
+              class="agenda-visual-eventos"
+              id="agendaVisualEventos"
+            >
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div
+          class="agenda-visual-cerrado oculto"
+          id="agendaVisualCerrado"
+        >
+          <strong>
+            Bonsai está cerrado este día
+          </strong>
+
+          <span>
+            Javii atiende de martes a sábado.
+        </span>
+        </div>
+
+      </div>
+
+      <p
+        class="estado-carga"
+        id="cargandoAgenda"
+      >
+        Cargando agenda...
+      </p>
+
+
+      <div
+        class="admin-lista-reservas"
+        id="listaAgenda"
+      >
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         CALENDARIO
+    ================================================== -->
+
+    <!-- ==================================================
+     CALENDARIO
+================================================== -->
+
+    <section
+      class="admin-seccion oculto"
+      id="seccionCalendario"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            CALENDARIO
+          </p>
+
+          <h2>
+            Calendario mensual
+          </h2>
+
+          <p>
+            Revisa rápidamente las reservas y bloqueos de cada día.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="calendario-card">
+
+
+        <!-- ==========================================
+             CABECERA
+        ========================================== -->
+
+        <div class="calendario-header">
+
+          <button
+            type="button"
+            class="calendario-nav-btn"
+            id="calendarioAnterior"
+            aria-label="Mes anterior"
+          >
+            ‹
+          </button>
+
+
+          <div class="calendario-mes">
+
+                <span>
+                    AGENDA
+                </span>
+
+            <h3 id="tituloMesCalendario">
+              -
+            </h3>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="calendario-nav-btn"
+            id="calendarioSiguiente"
+            aria-label="Mes siguiente"
+          >
+            ›
+          </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             BOTÓN HOY
+        ========================================== -->
+
+        <div class="calendario-acciones">
+
+          <button
+            type="button"
+            class="calendario-hoy-btn"
+            id="calendarioHoy"
+          >
+            Ir a hoy
+          </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             LEYENDA
+        ========================================== -->
+
+        <div class="calendario-leyenda">
+
+          <div>
+            <span class="leyenda-punto leyenda-reservas"></span>
+            Reservas
+          </div>
+
+          <div>
+            <span class="leyenda-punto leyenda-bloqueo"></span>
+            Bloqueo parcial
+          </div>
+
+          <div>
+            <span class="leyenda-punto leyenda-completo"></span>
+            Día bloqueado
+          </div>
+
+        </div>
+
+
+        <!-- ==========================================
+             DÍAS DE LA SEMANA
+        ========================================== -->
+
+        <div class="calendario-semana">
+
+          <span>Lun</span>
+          <span>Mar</span>
+          <span>Mié</span>
+          <span>Jue</span>
+          <span>Vie</span>
+          <span>Sáb</span>
+          <span>Dom</span>
+
+        </div>
+
+
+        <!-- ==========================================
+             CARGANDO
+        ========================================== -->
+
+        <p
+          class="estado-carga"
+          id="cargandoCalendario"
+        >
+          Cargando calendario...
+        </p>
+
+
+        <!-- ==========================================
+             CUADRÍCULA
+        ========================================== -->
+
+        <div
+          class="calendario-grid"
+          id="calendarioGrid"
+        >
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         BLOQUEAR HORARIOS
+    ================================================== -->
+
+    <!-- ==================================================
+         BLOQUEAR HORARIOS
+    ================================================== -->
+
+    <section
+      class="admin-seccion oculto"
+      id="seccionBloqueos"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            DISPONIBILIDAD
+          </p>
+
+          <h2>
+            Bloquear horarios
+          </h2>
+
+          <p>
+            Bloquea horas específicas o un día completo para evitar
+            que las clientas puedan reservar.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="bloqueos-layout">
+
+
+        <!-- ==========================================
+             CREAR BLOQUEO
+        ========================================== -->
+
+        <div class="bloqueo-formulario-card">
+
+          <h3>
+            Nuevo bloqueo
+          </h3>
+
+
+          <!-- FECHA -->
+
+          <div class="campo-formulario">
+
+            <label for="bloqueoFecha">
+              Fecha
+            </label>
+
+            <input
+              type="date"
+              id="bloqueoFecha"
+            >
+
+            <small class="ayuda-campo">
+              Atención de martes a sábado.
+            </small>
+
+          </div>
+
+
+          <!-- TIPO DE BLOQUEO -->
+
+          <div class="bloqueo-tipo">
+
+            <p class="bloqueo-label">
+              Tipo de bloqueo
+            </p>
+
+
+            <label class="bloqueo-radio">
+
+              <input
+                type="radio"
+                name="tipoBloqueo"
+                value="horario"
+                checked
+              >
+
+              <span>
+                        Horario específico
+                    </span>
+
+            </label>
+
+
+            <label class="bloqueo-radio">
+
+              <input
+                type="radio"
+                name="tipoBloqueo"
+                value="dia"
+              >
+
+              <span>
+                        Día completo
+                    </span>
+
+            </label>
+
+          </div>
+
+
+          <!-- HORARIOS -->
+
+          <div
+            class="bloqueo-horarios"
+            id="bloqueoHorarios"
+          >
+
+            <div class="campo-formulario">
+
+              <label for="bloqueoDesde">
+                Desde
+              </label>
+
+              <select id="bloqueoDesde">
+              </select>
+
+            </div>
+
+
+            <div class="campo-formulario">
+
+              <label for="bloqueoHasta">
+                Hasta
+              </label>
+
+              <select id="bloqueoHasta">
+              </select>
+
+            </div>
+
+          </div>
+
+
+          <!-- MOTIVO -->
+
+          <div class="campo-formulario">
+
+            <label for="bloqueoMotivo">
+              Motivo
+            </label>
+
+            <textarea
+              id="bloqueoMotivo"
+              maxlength="300"
+              placeholder="Ejemplo: Trámite personal, capacitación, vacaciones..."
+            ></textarea>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn-crear-bloqueo"
+            id="btnCrearBloqueo"
+          >
+            Bloquear horario
+          </button>
+
+        </div>
+
+
+        <!-- ==========================================
+             BLOQUEOS EXISTENTES
+        ========================================== -->
+
+        <div class="bloqueos-listado-card">
+
+          <div class="bloqueos-listado-header">
+
+            <div>
+
+              <p class="admin-subtitulo">
+                BLOQUEOS
+              </p>
+
+              <h3>
+                Próximos bloqueos
+              </h3>
+
+            </div>
+
+          </div>
+
+
+          <p
+            class="estado-carga"
+            id="cargandoBloqueos"
+          >
+            Cargando bloqueos...
+          </p>
+
+
+          <div
+            class="lista-bloqueos"
+            id="listaBloqueos"
+          >
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+         SERVICIOS
+    ================================================== -->
+
+    <!-- ==================================================
+     SERVICIOS
+================================================== -->
+
+    <section
+      class="admin-seccion oculto"
+      id="seccionServicios"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            SERVICIOS
+          </p>
+
+          <h2>
+            Administrar servicios
+          </h2>
+
+          <p>
+            Modifica el precio, duración y disponibilidad de los
+            servicios que pueden reservar las clientas.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <p
+        class="estado-carga"
+        id="cargandoServicios"
+      >
+        Cargando servicios...
+      </p>
+
+
+      <div
+        class="admin-servicios-grid"
+        id="listaServiciosAdmin"
+      >
+      </div>
+
+    </section>
+
+
+    <!-- ==================================================
+     CLIENTES
+================================================== -->
+
+    <section
+      class="admin-seccion oculto"
+      id="seccionClientes"
+    >
+
+      <div class="admin-titulo-seccion">
+
+        <div>
+
+          <p class="admin-subtitulo">
+            CLIENTES
+          </p>
+
+          <h2>
+            Clientas registradas
+          </h2>
+
+          <p>
+            Busca clientas, revisa sus datos de contacto
+            y consulta su historial de reservas.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- BUSCADOR -->
+
+      <div class="clientes-buscador">
+
+        <label for="buscarCliente">
+          Buscar clienta
+        </label>
+
+        <input
+          type="search"
+          id="buscarCliente"
+          placeholder="Nombre, teléfono o correo..."
+          autocomplete="off"
+        >
+
+      </div>
+
+
+      <!-- RESUMEN -->
+
+      <div class="clientes-resumen">
+
+        <span>
+            Clientas encontradas
+        </span>
+
+        <strong id="cantidadClientesMostrados">
+          0
+        </strong>
+
+      </div>
+
+
+      <p
+        class="estado-carga"
+        id="cargandoClientes"
+      >
+        Cargando clientas...
+      </p>
+
+
+      <div
+        class="clientes-grid"
+        id="listaClientesAdmin"
+      >
+      </div>
+
+    </section>
+
+
+  </div>
+
+</main>
+
+
+<!-- ==================================================
+     MODAL CANCELAR RESERVA
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalCancelar"
+>
+
+  <div class="modal-bonsai">
+
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarModalCancelar"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      CANCELAR RESERVA
+    </p>
+
+
+    <h2>
+      Cancelar hora
+    </h2>
+
+
+    <p class="modal-introduccion">
+      Esta acción liberará el horario para que pueda ser reservado nuevamente.
+    </p>
+
+
+    <div
+      class="modal-resumen"
+      id="resumenCancelar"
+    >
+    </div>
+
+
+    <div class="campo-formulario">
+
+      <label for="motivoCancelacion">
+        Motivo de la cancelación
+      </label>
+
+
+      <textarea
+        id="motivoCancelacion"
+        maxlength="500"
+        placeholder="Explica brevemente a la clienta por qué debes cancelar su hora..."
+      ></textarea>
+
+    </div>
+
+
+    <p class="modal-ayuda">
+      El motivo quedará registrado en la reserva y posteriormente se
+      incluirá en la notificación enviada a la clienta.
+    </p>
+
+
+    <div class="modal-acciones">
+
+      <button
+        type="button"
+        class="btn-modal-volver"
+        id="volverCancelar"
+      >
+        Volver
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-modal-cancelar"
+        id="confirmarCancelacion"
+      >
+        Cancelar reserva
+      </button>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     MODAL SOLICITAR CAMBIO
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalCambio"
+>
+
+  <div class="modal-bonsai">
+
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarModalCambio"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      SOLICITAR CAMBIO
+    </p>
+
+
+    <h2>
+      Contactar a la clienta
+    </h2>
+
+
+    <p class="modal-introduccion">
+      Explica el motivo antes de contactar a la clienta para coordinar
+      un nuevo horario.
+    </p>
+
+
+    <div
+      class="modal-resumen"
+      id="resumenCambio"
+    >
+    </div>
+
+
+    <div class="campo-formulario">
+
+      <label for="motivoCambio">
+        Motivo del cambio
+      </label>
+
+
+      <textarea
+        id="motivoCambio"
+        maxlength="500"
+        placeholder="Ejemplo: Necesito modificar tu hora debido a un cambio en mi agenda..."
+      ></textarea>
+
+    </div>
+
+
+    <p class="modal-ayuda">
+      La hora actual continuará bloqueada mientras Javii coordina el cambio
+      con la clienta.
+    </p>
+
+
+    <div class="modal-acciones modal-acciones-cambio">
+
+      <button
+        type="button"
+        class="btn-whatsapp-modal"
+        id="whatsappCambio"
+      >
+        Contactar por WhatsApp
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-modal-guardar"
+        id="confirmarCambio"
+      >
+        Guardar solicitud
+      </button>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<!-- ==================================================
+     MODAL REAGENDAR
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalReagendar"
+>
+
+  <div class="modal-bonsai modal-reagendar">
+
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarModalReagendar"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      REAGENDAR RESERVA
+    </p>
+
+
+    <h2>
+      Seleccionar nuevo horario
+    </h2>
+
+
+    <p class="modal-introduccion">
+      Selecciona la nueva fecha acordada con la clienta y luego
+      escoge una hora disponible.
+    </p>
+
+
+    <div
+      class="modal-resumen"
+      id="resumenReagendar"
+    >
+    </div>
+
+
+    <div class="campo-formulario">
+
+      <label for="fechaReagendar">
+        Nueva fecha
+      </label>
+
+
+      <input
+        type="date"
+        id="fechaReagendar"
+      >
+
+
+      <small class="ayuda-campo">
+        Atención de martes a sábado, de 10:30 a 21:00.
+      </small>
+
+    </div>
+
+
+    <div class="reagendar-horas">
+
+      <label>
+        Horas disponibles
+      </label>
+
+
+      <p
+        class="mensaje-horas"
+        id="mensajeHorasReagendar"
+      >
+        Selecciona una fecha.
+      </p>
+
+
+      <div
+        class="horas-reagendar"
+        id="horasReagendar"
+      >
+      </div>
+
+    </div>
+
+
+    <div
+      class="nuevo-horario-resumen oculto"
+      id="nuevoHorarioResumen"
+    >
+
+      <div>
+
+                <span>
+                    Nuevo horario seleccionado
+                </span>
+
+        <strong id="nuevoHorarioTexto">
+          -
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <div class="modal-acciones">
+
+      <button
+        type="button"
+        class="btn-modal-volver"
+        id="volverReagendar"
+      >
+        Volver
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-modal-guardar"
+        id="confirmarReagendamiento"
+        disabled
+      >
+        Confirmar reagendamiento
+      </button>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     MODAL HISTORIAL CLIENTA
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalHistorialCliente"
+>
+
+  <div class="modal-bonsai modal-cliente-historial">
+
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarHistorialCliente"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      CLIENTA
+    </p>
+
+
+    <h2 id="nombreHistorialCliente">
+      Historial
+    </h2>
+
+
+    <div
+      class="cliente-modal-datos"
+      id="datosHistorialCliente"
+    >
+    </div>
+
+
+    <div class="cliente-historial-cabecera">
+
+      <h3>
+        Historial de reservas
+      </h3>
+
+      <span id="cantidadHistorialCliente">
+                0 reservas
+            </span>
+
+    </div>
+
+
+    <div
+      class="cliente-historial-lista"
+      id="historialClienteLista"
+    >
+    </div>
+
+
+    <div class="modal-acciones">
+
+      <button
+        type="button"
+        class="btn-modal-volver"
+        id="volverHistorialCliente"
+      >
+        Cerrar
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     MODAL - RESERVA CANCELADA
+================================================== -->
+
+<div
+  class="modal-fondo oculto"
+  id="modalNotificacionCancelacion"
+>
+
+  <div class="modal-bonsai modal-notificacion-whatsapp">
+
+    <button
+      type="button"
+      class="modal-cerrar"
+      id="cerrarModalNotificacionCancelacion"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <p class="admin-subtitulo">
+      RESERVA CANCELADA
+    </p>
+
+
+    <h2>
+      La reserva fue cancelada
+    </h2>
+
+
+    <p class="notificacion-whatsapp-texto">
+      El horario ya quedó disponible nuevamente.
+      Puedes avisarle a la clienta por WhatsApp.
+    </p>
+
+
+    <div
+      class="notificacion-whatsapp-resumen"
+      id="resumenNotificacionCancelacion"
+    >
+    </div>
+
+
+    <div class="modal-acciones">
+
+      <button
+        type="button"
+        class="btn-modal-volver"
+        id="btnCerrarNotificacionCancelacion"
+      >
+        Cerrar
+      </button>
+
+
+      <button
+        type="button"
+        class="btn-notificar-whatsapp"
+        id="btnNotificarCancelacionWhatsApp"
+      >
+        Notificar por WhatsApp
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ==================================================
+     FOOTER
+================================================== -->
+
+<footer class="admin-footer">
+
+  <strong>
+    Bonsai
+  </strong>
+
+  <span>
+        Panel administrativo
+    </span>
+
+</footer>
+
+
+<script
+  type="module"
+  src="js/admin.js"
+></script>
+
+<script
+  type="module"
+  src="js/admin-bloqueos.js"
+></script>
+
+<script
+  type="module"
+  src="js/admin-servicios.js"
+></script>
+
+<script
+  type="module"
+  src="js/admin-calendario.js"
+></script>
+
+<script
+  type="module"
+  src="js/admin-clientes.js"
+></script>
+
+<script
+  type="module"
+  src="js/admin-agenda-visual.js"
+></script>
+
+</body>
+
+</html>

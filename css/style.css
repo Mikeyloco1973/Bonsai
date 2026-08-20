@@ -1940,3 +1940,418 @@ footer p {
   }
 
 }
+
+/* ==================================================
+   MIS RESERVAS - NUEVOS ESTADOS
+================================================== */
+
+.estado-pendiente {
+  background-color: #fff1cf;
+  color: #926a18;
+}
+
+
+.estado-cambio {
+  background-color: #fff0dc;
+  color: #9b641c;
+}
+
+
+.estado-reagendada {
+  background-color: #e8edf6;
+  color: #4b658a;
+}
+
+
+/* ==================================================
+   AVISOS DENTRO DE RESERVAS
+================================================== */
+
+.reserva-aviso {
+  margin-top: 22px;
+
+  padding: 13px 15px;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+.reserva-aviso-pendiente {
+  background-color: #fff8e8;
+
+  border: 1px solid #f0dfb8;
+
+  color: #87651f;
+}
+
+
+.reserva-aviso-cambio {
+  background-color: #fff4e4;
+
+  border: 1px solid #efd6af;
+
+  color: #8b611f;
+}
+
+
+.reserva-aviso-cancelada {
+  background-color: #f9eaea;
+
+  border: 1px solid #eccccc;
+
+  color: #955353;
+}
+
+
+/* ==================================================
+   RESERVA REAGENDADA
+================================================== */
+
+.reserva-reagendada-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-top: 22px;
+
+  padding: 15px;
+
+  background-color: #eef2f8;
+
+  border: 1px solid #dce4ef;
+
+  border-radius: 7px;
+}
+
+
+.reserva-reagendada-info strong {
+  color: #4b658a;
+
+  font-size: 12px;
+}
+
+
+.reserva-reagendada-info span {
+  color: #66758a;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+/* ==================================================
+   SERVICIOS PÚBLICOS FIRESTORE
+================================================== */
+
+.servicios-publicos {
+  padding: 90px 25px;
+
+  background: #f7f8f5;
+}
+
+
+.servicios-publicos-contenedor {
+  width: 100%;
+
+  max-width: 1150px;
+
+  margin: 0 auto;
+}
+
+
+/* ==================================================
+   TÍTULO
+================================================== */
+
+.servicios-publicos-titulo {
+  max-width: 620px;
+
+  margin: 0 auto 45px;
+
+  text-align: center;
+}
+
+
+.servicios-publicos-titulo > p {
+  margin: 0 0 12px;
+
+  color: #758078;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+
+.servicios-publicos-titulo h2 {
+  margin: 0 0 15px;
+
+  color: #304738;
+
+  font-size: clamp(
+    28px,
+    4vw,
+    42px
+  );
+
+  font-weight: 500;
+}
+
+
+.servicios-publicos-titulo span {
+  color: #7e887f;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+}
+
+
+/* ==================================================
+   CARGANDO
+================================================== */
+
+.servicios-publicos-cargando {
+  text-align: center;
+
+  color: #8a938c;
+
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   GRID
+================================================== */
+
+.servicios-publicos-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+}
+
+
+/* ==================================================
+   TARJETA
+================================================== */
+
+.servicio-publico-card {
+  min-height: 245px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 27px;
+
+  background: white;
+
+  border: 1px solid #e5e9e5;
+
+  border-radius: 10px;
+
+  box-shadow:
+    0 7px 24px
+    rgba(35, 55, 43, 0.035);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.servicio-publico-card:hover {
+  transform: translateY(-3px);
+
+  border-color: #ccd6ce;
+
+  box-shadow:
+    0 12px 30px
+    rgba(35, 55, 43, 0.07);
+}
+
+
+/* ==================================================
+   CABECERA
+================================================== */
+
+.servicio-publico-cabecera {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 16px;
+}
+
+
+.servicio-publico-numero {
+  color: #a2aaa4;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+}
+
+
+.servicio-publico-cabecera h3 {
+  margin: 0;
+
+  color: #344c3d;
+
+  font-size: 21px;
+
+  font-weight: 500;
+
+  line-height: 1.25;
+}
+
+
+/* ==================================================
+   PRECIO / DURACIÓN
+================================================== */
+
+.servicio-publico-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 22px;
+}
+
+
+.servicio-publico-info strong {
+  color: #405b49;
+
+  font-size: 14px;
+}
+
+
+.servicio-publico-info span {
+  color: #909991;
+
+  font-size: 10px;
+}
+
+
+/* ==================================================
+   RESERVAR
+================================================== */
+
+.servicio-publico-reservar {
+  align-self: flex-start;
+
+  margin-top: auto;
+
+  padding-top: 25px;
+
+  color: #344c3d;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+
+  text-decoration: none;
+
+  text-transform: uppercase;
+}
+
+
+.servicio-publico-reservar::after {
+  content: " →";
+
+  transition: margin-left 0.2s ease;
+}
+
+
+.servicio-publico-reservar:hover::after {
+  margin-left: 5px;
+}
+
+
+/* ==================================================
+   SIN SERVICIOS
+================================================== */
+
+.servicios-publicos-vacio {
+  grid-column: 1 / -1;
+
+  padding: 50px 25px;
+
+  text-align: center;
+
+  background: white;
+
+  border: 1px solid #e5e9e5;
+
+  border-radius: 10px;
+}
+
+
+.servicios-publicos-vacio h3 {
+  margin: 0 0 8px;
+
+  color: #344c3d;
+}
+
+
+.servicios-publicos-vacio p {
+  margin: 0;
+
+  color: #8b948d;
+
+  font-size: 12px;
+}
+
+
+/* ==================================================
+   RESPONSIVE
+================================================== */
+
+@media (max-width: 900px) {
+
+  .servicios-publicos-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .servicios-publicos {
+    padding:
+      65px
+      18px;
+  }
+
+
+  .servicios-publicos-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .servicio-publico-card {
+    min-height: 220px;
+  }
+
+}

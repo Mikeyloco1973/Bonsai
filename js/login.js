@@ -1,4 +1,5 @@
-import { auth } from "./firebase-config.js";
+import { auth, db } from "./firebase-config.js";
+import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
   signInWithEmailAndPassword,
@@ -101,15 +102,50 @@ formulario.addEventListener("submit", async (event) => {
     );
 
 
-    alert(
-      "Inicio de sesión correcto. ¡Bienvenido a Bonsai!"
-    );
+// ==========================================
+// COMPROBAR ROL DEL USUARIO
+// ==========================================
+
+    const usuarioRef =
+      doc(
+        db,
+        "usuarios",
+        usuario.uid
+      );
 
 
-    // Por ahora volvemos al inicio.
-    // Más adelante enviaremos directamente a la agenda.
+    const usuarioDoc =
+      await getDoc(
+        usuarioRef
+      );
 
-    window.location.href = "index.html";
+
+    if (!usuarioDoc.exists()) {
+
+      alert(
+        "No se encontraron los datos de esta cuenta."
+      );
+
+      return;
+
+    }
+
+
+    const datosUsuario =
+      usuarioDoc.data();
+
+
+    if (datosUsuario.rol === "admin") {
+
+      window.location.href =
+        "admin.html";
+
+    } else {
+
+      window.location.href =
+        "index.html";
+
+    }
 
 
   } catch (error) {

@@ -1,394 +1,245 @@
+// ==================================================
+// BONSAI
+// AGENDA CLIENTAS
+// ==================================================
+
 import { auth, db } from "./firebase-config.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
   collection,
-  doc,
-  getDocs,
   query,
   where,
+  getDocs,
+  doc,
+  getDoc,
   runTransaction,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ==========================================
-// DATOS DE LOS SERVICIOS BONSAI
-// ==========================================
+// ==================================================
+// CONFIGURACIÓN
+// ==================================================
 
-const servicios = {
+const ESTILISTA_ID =
+  "javiera";
 
-  "corte": {
-    nombre: "Corte",
-    precio: "$40.000",
-    precioNumero: 40000,
-    precioDesde: false,
-    duracionTexto: "1 h 30 min",
-    duracion: 90
-  },
+const ESTILISTA_NOMBRE =
+  "Javii";
 
-  "corte-tratamiento": {
-    nombre: "Corte + tratamiento",
-    precio: "$75.000",
-    precioNumero: 75000,
-    precioDesde: false,
-    duracionTexto: "1 h 30 min",
-    duracion: 90
-  },
+const APERTURA =
+  630; // 10:30
 
-  "tratamiento": {
-    nombre: "Tratamiento",
-    precio: "$45.000",
-    precioNumero: 45000,
-    precioDesde: false,
-    duracionTexto: "1 h 30 min",
-    duracion: 90
-  },
+const CIERRE =
+  1260; // 21:00
 
-  "botox": {
-    nombre: "Botox",
-    precio: "Desde $60.000",
-    precioNumero: 60000,
-    precioDesde: true,
-    duracionTexto: "3 horas",
-    duracion: 180
-  },
-
-  "alisado": {
-    nombre: "Alisado",
-    precio: "Desde $80.000",
-    precioNumero: 80000,
-    precioDesde: true,
-    duracionTexto: "3 horas",
-    duracion: 180
-  },
-
-  "color-global": {
-    nombre: "Color global",
-    precio: "Desde $60.000",
-    precioNumero: 60000,
-    precioDesde: true,
-    duracionTexto: "3 horas",
-    duracion: 180
-  },
-
-  "iluminaciones": {
-    nombre: "Iluminaciones",
-    precio: "Desde $130.000",
-    precioNumero: 130000,
-    precioDesde: true,
-    duracionTexto: "5 horas",
-    duracion: 300
-  }
-
-};
+const INTERVALO =
+  30;
 
 
-// ==========================================
-// HORARIO DE JAVII
-// ==========================================
+// ==================================================
+// VARIABLES
+// ==================================================
 
-const ESTILISTA_ID = "javiera";
-
-const ESTILISTA_NOMBRE = "Javii";
-
-
-// 10:30
-const APERTURA = 630;
+let usuarioActual =
+  null;
 
 
-// 21:00
-const CIERRE = 1260;
+let servicios =
+  {};
 
 
-// Intervalos de 30 minutos
-const INTERVALO = 30;
+let horaSeleccionada =
+  null;
 
 
-// ==========================================
-// ELEMENTOS HTML
-// ==========================================
+let reservaEnProceso =
+  false;
+
+
+// ==================================================
+// ELEMENTOS
+// ==================================================
+
+const formAgenda =
+  document.getElementById(
+    "formAgenda"
+  );
+
 
 const servicioSelect =
-  document.getElementById("servicio");
+  document.getElementById(
+    "servicio"
+  );
 
-const fechaInput =
-  document.getElementById("fechaReserva");
 
-const horasContenedor =
-  document.getElementById("horasDisponibles");
+const fechaReserva =
+  document.getElementById(
+    "fechaReserva"
+  );
+
+
+const horasDisponibles =
+  document.getElementById(
+    "horasDisponibles"
+  );
+
 
 const mensajeHoras =
-  document.getElementById("mensajeHoras");
+  document.getElementById(
+    "mensajeHoras"
+  );
+
 
 const detalleServicio =
-  document.getElementById("detalleServicio");
+  document.getElementById(
+    "detalleServicio"
+  );
+
 
 const precioServicio =
-  document.getElementById("precioServicio");
+  document.getElementById(
+    "precioServicio"
+  );
+
 
 const duracionServicio =
-  document.getElementById("duracionServicio");
+  document.getElementById(
+    "duracionServicio"
+  );
+
 
 const resumenReserva =
-  document.getElementById("resumenReserva");
+  document.getElementById(
+    "resumenReserva"
+  );
+
 
 const resumenServicio =
-  document.getElementById("resumenServicio");
+  document.getElementById(
+    "resumenServicio"
+  );
+
 
 const resumenFecha =
-  document.getElementById("resumenFecha");
+  document.getElementById(
+    "resumenFecha"
+  );
+
 
 const resumenHora =
-  document.getElementById("resumenHora");
-
-const btnConfirmar =
-  document.getElementById("btnConfirmarReserva");
-
-const btnCerrarSesion =
-  document.getElementById("btnCerrarSesion");
-
-const formulario =
-  document.getElementById("formAgenda");
+  document.getElementById(
+    "resumenHora"
+  );
 
 
-// ==========================================
-// VARIABLES
-// ==========================================
-
-let usuarioActual = null;
-
-let horaSeleccionada = null;
-
-let inicioSeleccionado = null;
+const btnConfirmarReserva =
+  document.getElementById(
+    "btnConfirmarReserva"
+  );
 
 
-// ==========================================
-// PROTEGER LA PÁGINA
-// ==========================================
+// ==================================================
+// SESIÓN
+// ==================================================
 
 onAuthStateChanged(
   auth,
-  (usuario) => {
+  async (usuario) => {
 
     if (!usuario) {
-
-      alert(
-        "Debes iniciar sesión para agendar una hora."
-      );
 
       window.location.href =
         "login.html";
 
       return;
+
     }
 
 
-    usuarioActual = usuario;
+    usuarioActual =
+      usuario;
+
+
+    iniciarAgenda();
+
+
+    await cargarServicios();
 
   }
 );
 
 
-// ==========================================
-// FECHA MÍNIMA
-// ==========================================
+// ==================================================
+// INICIAR
+// ==================================================
 
-configurarFechaMinima();
+function iniciarAgenda() {
 
-
-function configurarFechaMinima() {
-
-  const hoy = new Date();
-
-  const anio =
-    hoy.getFullYear();
-
-  const mes =
-    String(
-      hoy.getMonth() + 1
-    ).padStart(2, "0");
-
-  const dia =
-    String(
-      hoy.getDate()
-    ).padStart(2, "0");
+  fechaReserva.min =
+    obtenerFechaHoy();
 
 
-  fechaInput.min =
-    `${anio}-${mes}-${dia}`;
+  btnConfirmarReserva.disabled =
+    true;
+
+
+  detalleServicio.classList.add(
+    "oculto"
+  );
+
+
+  resumenReserva.classList.add(
+    "oculto"
+  );
+
+
+  horasDisponibles.innerHTML =
+    "";
+
+
+  mensajeHoras.textContent =
+    "Selecciona un servicio y una fecha.";
+
+
+  servicioSelect.innerHTML = `
+
+        <option value="">
+            Selecciona un servicio
+        </option>
+
+    `;
 
 }
 
 
-// ==========================================
-// CAMBIO DE SERVICIO
-// ==========================================
+// ==================================================
+// CARGAR SERVICIOS FIRESTORE
+// ==================================================
 
-servicioSelect.addEventListener(
-  "change",
-  async () => {
+async function cargarServicios() {
 
-    limpiarSeleccion();
-
-
-    const servicio =
-      servicios[
-        servicioSelect.value
-        ];
-
-
-    if (!servicio) {
-
-      detalleServicio.classList.add(
-        "oculto"
-      );
-
-      limpiarHoras();
-
-      return;
-    }
-
-
-    precioServicio.textContent =
-      servicio.precio;
-
-
-    duracionServicio.textContent =
-      servicio.duracionTexto;
-
-
-    detalleServicio.classList.remove(
-      "oculto"
-    );
-
-
-    await cargarHorasDisponibles();
-
-  }
-);
-
-
-// ==========================================
-// CAMBIO DE FECHA
-// ==========================================
-
-fechaInput.addEventListener(
-  "change",
-  async () => {
-
-    limpiarSeleccion();
-
-
-    if (!fechaInput.value) {
-
-      limpiarHoras();
-
-      return;
-    }
-
-
-    const fecha =
-      crearFechaLocal(
-        fechaInput.value
-      );
-
-
-    const diaSemana =
-      fecha.getDay();
-
-
-    // Domingo = 0
-    // Lunes = 1
-
-    if (
-      diaSemana === 0 ||
-      diaSemana === 1
-    ) {
-
-      alert(
-        "Javii atiende solamente de martes a sábado."
-      );
-
-
-      fechaInput.value = "";
-
-      limpiarHoras();
-
-      return;
-    }
-
-
-    await cargarHorasDisponibles();
-
-  }
-);
-
-
-// ==========================================
-// CARGAR HORAS DISPONIBLES
-// ==========================================
-
-async function cargarHorasDisponibles() {
-
-  limpiarHoras();
-
-
-  const servicio =
-    servicios[
-      servicioSelect.value
-      ];
-
-
-  const fecha =
-    fechaInput.value;
-
-
-  if (!servicio || !fecha) {
-
-    mensajeHoras.textContent =
-      "Selecciona primero un servicio y una fecha.";
-
-    return;
-  }
-
-
-  mensajeHoras.textContent =
-    "Consultando disponibilidad...";
+  servicioSelect.disabled =
+    true;
 
 
   try {
 
-    // ==================================
-    // CONSULTAR BLOQUES YA OCUPADOS
-    // ==================================
-
-    const consulta =
-      query(
+    const resultado =
+      await getDocs(
         collection(
           db,
-          "agendaSlots"
-        ),
-        where(
-          "fecha",
-          "==",
-          fecha
+          "servicios"
         )
       );
 
 
-    const resultado =
-      await getDocs(
-        consulta
-      );
-
-
-    const minutosOcupados =
-      new Set();
+    const lista =
+      [];
 
 
     resultado.forEach(
@@ -399,38 +250,454 @@ async function cargarHorasDisponibles() {
 
 
         if (
-          datos.estilistaId
-          === ESTILISTA_ID
+          datos.activo
+          !== true
         ) {
 
-          minutosOcupados.add(
-            datos.minuto
-          );
+          return;
 
         }
+
+
+        lista.push({
+
+          id:
+          documento.id,
+
+          ...datos
+
+        });
 
       }
     );
 
 
-    let cantidadDisponible = 0;
+    lista.sort(
+      (a, b) =>
+
+        Number(
+          a.orden || 999
+        )
+
+        -
+
+        Number(
+          b.orden || 999
+        )
+    );
 
 
-    // ==================================
-    // CREAR POSIBLES HORAS
-    // ==================================
+    servicios =
+      {};
+
+
+    lista.forEach(
+      (servicio) => {
+
+        servicios[
+          servicio.id
+          ] = servicio;
+
+
+        const opcion =
+          document.createElement(
+            "option"
+          );
+
+
+        opcion.value =
+          servicio.id;
+
+
+        opcion.textContent =
+          servicio.nombre;
+
+
+        servicioSelect.appendChild(
+          opcion
+        );
+
+      }
+    );
+
+    // ==================================================
+// SERVICIO RECIBIDO DESDE LA PÁGINA PRINCIPAL
+// ==================================================
+
+    const parametros =
+      new URLSearchParams(
+        window.location.search
+      );
+
+
+    const servicioURL =
+      parametros.get(
+        "servicio"
+      );
+
+
+    if (
+      servicioURL
+      &&
+      servicios[
+        servicioURL
+        ]
+    ) {
+
+      servicioSelect.value =
+        servicioURL;
+
+
+      mostrarDetalleServicio(
+        servicios[
+          servicioURL
+          ]
+      );
+
+
+      mensajeHoras.textContent =
+        "Ahora selecciona una fecha.";
+
+    }
+
+    if (
+      lista.length === 0
+    ) {
+
+      mensajeHoras.textContent =
+        "No hay servicios disponibles en este momento.";
+
+    }
+
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando servicios:",
+      error
+    );
+
+
+    mensajeHoras.textContent =
+      "No fue posible cargar los servicios.";
+
+  } finally {
+
+    servicioSelect.disabled =
+      false;
+
+  }
+
+}
+
+
+// ==================================================
+// CAMBIO SERVICIO
+// ==================================================
+
+servicioSelect.addEventListener(
+  "change",
+  async () => {
+
+    horaSeleccionada =
+      null;
+
+
+    ocultarResumen();
+
+
+    const servicio =
+      obtenerServicioSeleccionado();
+
+
+    if (!servicio) {
+
+      detalleServicio.classList.add(
+        "oculto"
+      );
+
+
+      limpiarHoras(
+        "Selecciona un servicio."
+      );
+
+
+      return;
+
+    }
+
+
+    mostrarDetalleServicio(
+      servicio
+    );
+
+
+    if (
+      fechaReserva.value
+      &&
+      fechaEsValida(
+        fechaReserva.value
+      )
+    ) {
+
+      await cargarHorasDisponibles();
+
+    } else {
+
+      limpiarHoras(
+        "Selecciona una fecha."
+      );
+
+    }
+
+  }
+);
+
+
+// ==================================================
+// CAMBIO FECHA
+// ==================================================
+
+fechaReserva.addEventListener(
+  "change",
+  async () => {
+
+    horaSeleccionada =
+      null;
+
+
+    ocultarResumen();
+
+
+    const fecha =
+      fechaReserva.value;
+
+
+    if (!fecha) {
+
+      limpiarHoras(
+        "Selecciona una fecha."
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      fecha <
+      obtenerFechaHoy()
+    ) {
+
+      alert(
+        "No puedes seleccionar una fecha anterior a hoy."
+      );
+
+
+      fechaReserva.value =
+        "";
+
+
+      limpiarHoras(
+        "Selecciona una fecha válida."
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      !fechaAtencionValida(
+        fecha
+      )
+    ) {
+
+      alert(
+        "Javii atiende de martes a sábado."
+      );
+
+
+      fechaReserva.value =
+        "";
+
+
+      limpiarHoras(
+        "Selecciona una fecha entre martes y sábado."
+      );
+
+
+      return;
+
+    }
+
+
+    if (
+      !obtenerServicioSeleccionado()
+    ) {
+
+      limpiarHoras(
+        "Selecciona primero un servicio."
+      );
+
+
+      return;
+
+    }
+
+
+    await cargarHorasDisponibles();
+
+  }
+);
+
+
+// ==================================================
+// OBTENER SERVICIO
+// ==================================================
+
+function obtenerServicioSeleccionado() {
+
+  const id =
+    servicioSelect.value;
+
+
+  if (
+    !id
+    ||
+    !servicios[id]
+  ) {
+
+    return null;
+
+  }
+
+
+  return {
+
+    id:
+    id,
+
+    ...servicios[id]
+
+  };
+
+}
+
+
+// ==================================================
+// DETALLE SERVICIO
+// ==================================================
+
+function mostrarDetalleServicio(
+  servicio
+) {
+
+  precioServicio.textContent =
+    formatearPrecio(
+      servicio.precio,
+      servicio.precioDesde
+    );
+
+
+  duracionServicio.textContent =
+    formatearDuracion(
+      servicio.duracionMinutos
+    );
+
+
+  detalleServicio.classList.remove(
+    "oculto"
+  );
+
+}
+
+
+// ==================================================
+// HORAS DISPONIBLES
+// ==================================================
+
+async function cargarHorasDisponibles() {
+
+  const servicio =
+    obtenerServicioSeleccionado();
+
+
+  const fecha =
+    fechaReserva.value;
+
+
+  horaSeleccionada =
+    null;
+
+
+  ocultarResumen();
+
+
+  horasDisponibles.innerHTML =
+    "";
+
+
+  btnConfirmarReserva.disabled =
+    true;
+
+
+  if (
+    !servicio
+    ||
+    !fecha
+  ) {
+
+    return;
+
+  }
+
+
+  mensajeHoras.textContent =
+    "Consultando horarios disponibles...";
+
+
+  try {
+
+    const [
+      slotsOcupados,
+      bloqueos
+    ] = await Promise.all([
+
+      obtenerSlotsOcupados(
+        fecha
+      ),
+
+      obtenerBloqueosFecha(
+        fecha
+      )
+
+    ]);
+
+
+    let disponibles =
+      0;
+
 
     for (
       let inicio = APERTURA;
 
-      inicio + servicio.duracion
-      <= CIERRE;
+      inicio
+      +
+      servicio.duracionMinutos
+      <=
+      CIERRE;
 
       inicio += INTERVALO
     ) {
 
-      // No mostrar horas pasadas
-      // si la fecha seleccionada es hoy
+      const fin =
+        inicio
+        +
+        servicio.duracionMinutos;
+
 
       if (
         horaYaPaso(
@@ -440,26 +707,40 @@ async function cargarHorasDisponibles() {
       ) {
 
         continue;
+
       }
 
 
-      const bloquesNecesarios =
+      const bloques =
         obtenerBloques(
           inicio,
-          servicio.duracion
+          servicio.duracionMinutos
         );
 
 
-      const existeChoque =
-        bloquesNecesarios.some(
+      const ocupado =
+        bloques.some(
           (minuto) =>
-            minutosOcupados.has(
+            slotsOcupados.has(
               minuto
             )
         );
 
 
-      if (existeChoque) {
+      if (ocupado) {
+
+        continue;
+
+      }
+
+
+      if (
+        hayChoqueConBloqueo(
+          inicio,
+          fin,
+          bloqueos
+        )
+      ) {
 
         continue;
 
@@ -467,63 +748,213 @@ async function cargarHorasDisponibles() {
 
 
       crearBotonHora(
-        inicio
+        inicio,
+        fin,
+        servicio
       );
 
 
-      cantidadDisponible++;
+      disponibles++;
 
     }
 
 
-    if (
-      cantidadDisponible === 0
-    ) {
+    mensajeHoras.textContent =
+      disponibles === 0
 
-      mensajeHoras.textContent =
-        "No hay horas disponibles para este servicio en la fecha seleccionada.";
+        ? "No hay horarios disponibles para este servicio en esa fecha."
 
-    } else {
-
-      mensajeHoras.textContent =
-        "Selecciona una hora disponible:";
-
-    }
+        : "Selecciona una hora disponible:";
 
 
   } catch (error) {
 
     console.error(
-      "Error consultando disponibilidad:",
+      "Error cargando horarios:",
       error
     );
 
 
     mensajeHoras.textContent =
-      "No fue posible consultar los horarios. Inténtalo nuevamente.";
+      "No fue posible consultar los horarios.";
 
   }
 
 }
 
 
-// ==========================================
-// CREAR BOTÓN DE HORA
-// ==========================================
+// ==================================================
+// SLOTS OCUPADOS
+// ==================================================
+
+async function obtenerSlotsOcupados(
+  fecha
+) {
+
+  const resultado =
+    await getDocs(
+      query(
+        collection(
+          db,
+          "agendaSlots"
+        ),
+        where(
+          "fecha",
+          "==",
+          fecha
+        )
+      )
+    );
+
+
+  const ocupados =
+    new Set();
+
+
+  resultado.forEach(
+    (documento) => {
+
+      const datos =
+        documento.data();
+
+
+      if (
+        datos.estilistaId
+        === ESTILISTA_ID
+      ) {
+
+        ocupados.add(
+          Number(
+            datos.minuto
+          )
+        );
+
+      }
+
+    }
+  );
+
+
+  return ocupados;
+
+}
+
+
+// ==================================================
+// BLOQUEOS
+// ==================================================
+
+async function obtenerBloqueosFecha(
+  fecha
+) {
+
+  const resultado =
+    await getDocs(
+      query(
+        collection(
+          db,
+          "bloqueos"
+        ),
+        where(
+          "fecha",
+          "==",
+          fecha
+        )
+      )
+    );
+
+
+  const bloqueos =
+    [];
+
+
+  resultado.forEach(
+    (documento) => {
+
+      const datos =
+        documento.data();
+
+
+      if (
+        datos.estilistaId
+        === ESTILISTA_ID
+      ) {
+
+        bloqueos.push(
+          datos
+        );
+
+      }
+
+    }
+  );
+
+
+  return bloqueos;
+
+}
+
+
+// ==================================================
+// CHOQUE BLOQUEO
+// ==================================================
+
+function hayChoqueConBloqueo(
+  inicio,
+  fin,
+  bloqueos
+) {
+
+  return bloqueos.some(
+    (bloqueo) => {
+
+      if (
+        bloqueo.diaCompleto
+        === true
+      ) {
+
+        return true;
+
+      }
+
+
+      return (
+
+        inicio
+        <
+        Number(
+          bloqueo.finMinutos
+        )
+
+        &&
+
+        fin
+        >
+        Number(
+          bloqueo.inicioMinutos
+        )
+
+      );
+
+    }
+  );
+
+}
+
+
+// ==================================================
+// BOTÓN HORA
+// ==================================================
 
 function crearBotonHora(
-  inicio
+  inicio,
+  fin,
+  servicio
 ) {
 
   const boton =
     document.createElement(
       "button"
-    );
-
-
-  const horaTexto =
-    minutosAHora(
-      inicio
     );
 
 
@@ -537,130 +968,78 @@ function crearBotonHora(
 
 
   boton.textContent =
-    horaTexto;
+    minutosAHora(
+      inicio
+    );
 
 
   boton.addEventListener(
     "click",
     () => {
 
-      seleccionarHora(
-        boton,
-        inicio
+      document
+        .querySelectorAll(
+          ".hora-btn"
+        )
+        .forEach(
+          (elemento) => {
+
+            elemento.classList.remove(
+              "hora-seleccionada"
+            );
+
+          }
+        );
+
+
+      boton.classList.add(
+        "hora-seleccionada"
+      );
+
+
+      horaSeleccionada =
+        inicio;
+
+
+      mostrarResumen(
+        servicio,
+        inicio,
+        fin
       );
 
     }
   );
 
 
-  horasContenedor.appendChild(
+  horasDisponibles.appendChild(
     boton
   );
 
 }
 
 
-// ==========================================
-// SELECCIONAR HORA
-// ==========================================
+// ==================================================
+// RESUMEN
+// ==================================================
 
-function seleccionarHora(
-  boton,
-  inicio
+function mostrarResumen(
+  servicio,
+  inicio,
+  fin
 ) {
-
-  document
-    .querySelectorAll(
-      ".hora-btn"
-    )
-    .forEach(
-      (elemento) => {
-
-        elemento.classList.remove(
-          "hora-seleccionada"
-        );
-
-      }
-    );
-
-
-  boton.classList.add(
-    "hora-seleccionada"
-  );
-
-
-  inicioSeleccionado =
-    inicio;
-
-
-  horaSeleccionada =
-    minutosAHora(
-      inicio
-    );
-
-
-  mostrarResumen();
-
-}
-
-
-// ==========================================
-// MOSTRAR RESUMEN
-// ==========================================
-
-function mostrarResumen() {
-
-  const servicio =
-    servicios[
-      servicioSelect.value
-      ];
-
-
-  if (
-    !servicio ||
-    !fechaInput.value ||
-    inicioSeleccionado === null
-  ) {
-
-    ocultarResumen();
-
-    return;
-
-  }
-
 
   resumenServicio.textContent =
     servicio.nombre;
 
 
-  const fecha =
-    crearFechaLocal(
-      fechaInput.value
-    );
-
-
   resumenFecha.textContent =
-    fecha.toLocaleDateString(
-      "es-CL",
-      {
-        weekday: "long",
-        day: "2-digit",
-        month: "long",
-        year: "numeric"
-      }
-    );
-
-
-  const horaFin =
-    minutosAHora(
-      inicioSeleccionado
-      +
-      servicio.duracion
+    formatearFecha(
+      fechaReserva.value
     );
 
 
   resumenHora.textContent =
-    `${horaSeleccionada} - ${horaFin}`;
+    `${minutosAHora(inicio)} - ${minutosAHora(fin)}`;
 
 
   resumenReserva.classList.remove(
@@ -668,31 +1047,63 @@ function mostrarResumen() {
   );
 
 
-  btnConfirmar.disabled =
+  btnConfirmarReserva.disabled =
     false;
 
 }
 
 
-// ==========================================
-// CONFIRMAR RESERVA
-// ==========================================
+function ocultarResumen() {
 
-formulario.addEventListener(
+  resumenReserva.classList.add(
+    "oculto"
+  );
+
+
+  btnConfirmarReserva.disabled =
+    true;
+
+
+  horaSeleccionada =
+    null;
+
+}
+
+
+function limpiarHoras(
+  mensaje
+) {
+
+  horasDisponibles.innerHTML =
+    "";
+
+
+  mensajeHoras.textContent =
+    mensaje;
+
+
+  horaSeleccionada =
+    null;
+
+
+  btnConfirmarReserva.disabled =
+    true;
+
+}
+
+
+// ==================================================
+// CREAR SOLICITUD
+// ==================================================
+
+formAgenda.addEventListener(
   "submit",
-  async (event) => {
+  async (evento) => {
 
-    event.preventDefault();
+    evento.preventDefault();
 
 
-    if (!usuarioActual) {
-
-      alert(
-        "Tu sesión ha expirado. Inicia sesión nuevamente."
-      );
-
-      window.location.href =
-        "login.html";
+    if (reservaEnProceso) {
 
       return;
 
@@ -700,43 +1111,160 @@ formulario.addEventListener(
 
 
     const servicio =
-      servicios[
-        servicioSelect.value
-        ];
+      obtenerServicioSeleccionado();
+
+
+    const fecha =
+      fechaReserva.value;
 
 
     if (
-      !servicio ||
-      !fechaInput.value ||
-      inicioSeleccionado === null
+      !usuarioActual
+      ||
+      !servicio
+      ||
+      !fecha
+      ||
+      horaSeleccionada === null
     ) {
 
       alert(
-        "Selecciona servicio, fecha y hora."
+        "Completa todos los datos de la reserva."
       );
+
 
       return;
 
     }
 
 
-    btnConfirmar.disabled =
-      true;
-
-
-    btnConfirmar.textContent =
-      "Confirmando reserva...";
-
+    // ==================================================
+    // VOLVER A LEER EL SERVICIO DESDE FIRESTORE
+    // ==================================================
+    //
+    // Así no confiamos solamente en la información que
+    // quedó cargada anteriormente en el navegador.
+    // ==================================================
 
     try {
 
-      await guardarReserva(
-        servicio
+      reservaEnProceso =
+        true;
+
+
+      btnConfirmarReserva.disabled =
+        true;
+
+
+      btnConfirmarReserva.textContent =
+        "Enviando solicitud...";
+
+
+      const servicioDoc =
+        await getDoc(
+          doc(
+            db,
+            "servicios",
+            servicio.id
+          )
+        );
+
+
+      if (
+        !servicioDoc.exists()
+        ||
+        servicioDoc.data().activo
+        !== true
+      ) {
+
+        alert(
+          "Este servicio ya no está disponible."
+        );
+
+
+        await cargarServicios();
+
+
+        return;
+
+      }
+
+
+      const servicioActual =
+        {
+
+          id:
+          servicio.id,
+
+          ...servicioDoc.data()
+
+        };
+
+
+      const fin =
+        horaSeleccionada
+        +
+        servicioActual
+          .duracionMinutos;
+
+
+      if (
+        horaSeleccionada
+        +
+        servicioActual.duracionMinutos
+        >
+        CIERRE
+      ) {
+
+        alert(
+          "La duración del servicio cambió. Selecciona nuevamente un horario."
+        );
+
+
+        await cargarHorasDisponibles();
+
+
+        return;
+
+      }
+
+
+      const bloqueos =
+        await obtenerBloqueosFecha(
+          fecha
+        );
+
+
+      if (
+        hayChoqueConBloqueo(
+          horaSeleccionada,
+          fin,
+          bloqueos
+        )
+      ) {
+
+        alert(
+          "Ese horario ya no está disponible."
+        );
+
+
+        await cargarHorasDisponibles();
+
+
+        return;
+
+      }
+
+
+      await crearReserva(
+        servicioActual,
+        fecha,
+        horaSeleccionada
       );
 
 
       alert(
-        "¡Tu hora fue reservada correctamente!"
+        "Tu solicitud fue enviada correctamente. Javii debe aceptar tu hora."
       );
 
 
@@ -747,7 +1275,7 @@ formulario.addEventListener(
     } catch (error) {
 
       console.error(
-        "Error al reservar:",
+        "Error creando reserva:",
         error
       );
 
@@ -758,11 +1286,8 @@ formulario.addEventListener(
       ) {
 
         alert(
-          "Lo sentimos, esa hora acaba de ser reservada por otra persona. Selecciona otra hora."
+          "Ese horario acaba de ser reservado. Selecciona otra hora."
         );
-
-
-        limpiarSeleccion();
 
 
         await cargarHorasDisponibles();
@@ -770,7 +1295,7 @@ formulario.addEventListener(
       } else {
 
         alert(
-          "No fue posible guardar la reserva. Inténtalo nuevamente."
+          "No fue posible enviar tu solicitud."
         );
 
       }
@@ -778,12 +1303,22 @@ formulario.addEventListener(
 
     } finally {
 
-      btnConfirmar.disabled =
+      reservaEnProceso =
         false;
 
 
-      btnConfirmar.textContent =
+      btnConfirmarReserva.textContent =
         "Confirmar reserva";
+
+
+      if (
+        horaSeleccionada !== null
+      ) {
+
+        btnConfirmarReserva.disabled =
+          false;
+
+      }
 
     }
 
@@ -791,30 +1326,27 @@ formulario.addEventListener(
 );
 
 
-// ==========================================
-// GUARDAR RESERVA EN FIRESTORE
-// ==========================================
+// ==================================================
+// CREAR RESERVA FIRESTORE
+// ==================================================
 
-async function guardarReserva(
-  servicio
+async function crearReserva(
+  servicio,
+  fecha,
+  inicio
 ) {
 
-  const fecha =
-    fechaInput.value;
-
-
-  const inicio =
-    inicioSeleccionado;
+  const duracion =
+    Number(
+      servicio.duracionMinutos
+    );
 
 
   const fin =
     inicio
     +
-    servicio.duracion;
+    duracion;
 
-
-  // Crear ID de reserva antes
-  // de iniciar la transacción
 
   const reservaRef =
     doc(
@@ -825,91 +1357,77 @@ async function guardarReserva(
     );
 
 
-  const bloques =
-    obtenerBloques(
-      inicio,
-      servicio.duracion
-    );
+  const referenciasSlots =
+    [];
 
 
-  const slotRefs =
-    bloques.map(
-      (minuto) => {
+  for (
+    let minuto = inicio;
 
-        const idSlot =
-          `${fecha}_${ESTILISTA_ID}_${minuto}`;
+    minuto < fin;
 
+    minuto += INTERVALO
+  ) {
 
-        return doc(
+    referenciasSlots.push({
+
+      minuto:
+      minuto,
+
+      ref:
+        doc(
           db,
           "agendaSlots",
-          idSlot
-        );
+          `${fecha}_${ESTILISTA_ID}_${minuto}`
+        )
 
-      }
-    );
+    });
 
+  }
 
-  // ======================================
-  // TRANSACCIÓN
-  // ======================================
 
   await runTransaction(
     db,
     async (transaction) => {
 
-      /*
-       Primero se leen TODOS
-       los bloques necesarios.
-      */
+      const documentosSlots =
+        [];
 
-      const documentosSlots = [];
 
+      // TODAS LAS LECTURAS PRIMERO
 
       for (
-        const slotRef
-        of slotRefs
+        const slot
+        of referenciasSlots
         ) {
 
-        const slotDoc =
-          await transaction.get(
-            slotRef
-          );
+        documentosSlots.push({
+
+          ...slot,
+
+          documento:
+            await transaction.get(
+              slot.ref
+            )
+
+        });
+
+      }
 
 
-        documentosSlots.push(
-          slotDoc
+      if (
+        documentosSlots.some(
+          (slot) =>
+            slot.documento.exists()
+        )
+      ) {
+
+        throw new Error(
+          "horario-ocupado"
         );
 
       }
 
-
-      /*
-       Si cualquiera ya existe,
-       otra persona ocupó esa hora.
-      */
-
-      for (
-        const slotDoc
-        of documentosSlots
-        ) {
-
-        if (
-          slotDoc.exists()
-        ) {
-
-          throw new Error(
-            "horario-ocupado"
-          );
-
-        }
-
-      }
-
-
-      // ==================================
-      // CREAR RESERVA
-      // ==================================
 
       transaction.set(
         reservaRef,
@@ -919,28 +1437,34 @@ async function guardarReserva(
           usuarioActual.uid,
 
           usuarioCorreo:
-          usuarioActual.email,
+            usuarioActual.email || "",
+
 
           servicioId:
-          servicioSelect.value,
+          servicio.id,
 
           servicioNombre:
           servicio.nombre,
 
           precio:
-          servicio.precioNumero,
+            Number(
+              servicio.precio
+            ),
 
           precioDesde:
-          servicio.precioDesde,
+            servicio.precioDesde
+            === true,
 
           duracionMinutos:
-          servicio.duracion,
+          duracion,
+
 
           estilistaId:
           ESTILISTA_ID,
 
           estilistaNombre:
           ESTILISTA_NOMBRE,
+
 
           fecha:
           fecha,
@@ -961,8 +1485,22 @@ async function guardarReserva(
           finMinutos:
           fin,
 
+
           estado:
-            "confirmada",
+            "pendiente",
+
+          motivoCambio:
+            null,
+
+          motivoCancelacion:
+            null,
+
+          canceladaPor:
+            null,
+
+          reagendada:
+            false,
+
 
           fechaCreacion:
             serverTimestamp()
@@ -971,15 +1509,11 @@ async function guardarReserva(
       );
 
 
-      // ==================================
-      // BLOQUEAR TRAMOS DE 30 MINUTOS
-      // ==================================
-
-      bloques.forEach(
-        (minuto, indice) => {
+      documentosSlots.forEach(
+        (slot) => {
 
           transaction.set(
-            slotRefs[indice],
+            slot.ref,
             {
 
               fecha:
@@ -989,7 +1523,7 @@ async function guardarReserva(
               ESTILISTA_ID,
 
               minuto:
-              minuto,
+              slot.minuto,
 
               reservaId:
               reservaRef.id
@@ -1006,20 +1540,23 @@ async function guardarReserva(
 }
 
 
-// ==========================================
-// OBTENER BLOQUES DE UNA RESERVA
-// ==========================================
+// ==================================================
+// BLOQUES
+// ==================================================
 
 function obtenerBloques(
   inicio,
   duracion
 ) {
 
-  const bloques = [];
+  const bloques =
+    [];
 
 
   const fin =
-    inicio + duracion;
+    inicio
+    +
+    duracion;
 
 
   for (
@@ -1042,16 +1579,54 @@ function obtenerBloques(
 }
 
 
-// ==========================================
-// COMPROBAR SI LA HORA YA PASÓ
-// ==========================================
+// ==================================================
+// FECHAS
+// ==================================================
+
+function fechaEsValida(
+  fecha
+) {
+
+  return (
+    fecha >= obtenerFechaHoy()
+    &&
+    fechaAtencionValida(
+      fecha
+    )
+  );
+
+}
+
+
+function fechaAtencionValida(
+  fechaTexto
+) {
+
+  const fecha =
+    crearFechaLocal(
+      fechaTexto
+    );
+
+
+  const dia =
+    fecha.getDay();
+
+
+  return (
+    dia !== 0
+    &&
+    dia !== 1
+  );
+
+}
+
 
 function horaYaPaso(
   fechaTexto,
-  inicioMinutos
+  inicio
 ) {
 
-  const hoy =
+  const ahora =
     new Date();
 
 
@@ -1062,16 +1637,19 @@ function horaYaPaso(
 
 
   const esHoy =
+
     fecha.getFullYear()
-    === hoy.getFullYear()
+    === ahora.getFullYear()
 
     &&
+
     fecha.getMonth()
-    === hoy.getMonth()
+    === ahora.getMonth()
 
     &&
+
     fecha.getDate()
-    === hoy.getDate();
+    === ahora.getDate();
 
 
   if (!esHoy) {
@@ -1082,105 +1660,49 @@ function horaYaPaso(
 
 
   const minutosActuales =
-    hoy.getHours() * 60
+    ahora.getHours()
+    *
+    60
+
     +
-    hoy.getMinutes();
+    ahora.getMinutes();
 
 
   return (
-    inicioMinutos
-    <= minutosActuales
+    inicio <= minutosActuales
   );
 
 }
 
 
-// ==========================================
-// LIMPIAR SELECCIÓN
-// ==========================================
+function obtenerFechaHoy() {
 
-function limpiarSeleccion() {
-
-  horaSeleccionada =
-    null;
+  const hoy =
+    new Date();
 
 
-  inicioSeleccionado =
-    null;
+  return [
 
+    hoy.getFullYear(),
 
-  ocultarResumen();
+    String(
+      hoy.getMonth() + 1
+    ).padStart(
+      2,
+      "0"
+    ),
 
-}
+    String(
+      hoy.getDate()
+    ).padStart(
+      2,
+      "0"
+    )
 
-
-// ==========================================
-// LIMPIAR HORARIOS
-// ==========================================
-
-function limpiarHoras() {
-
-  horasContenedor.innerHTML =
-    "";
+  ].join("-");
 
 }
 
-
-// ==========================================
-// OCULTAR RESUMEN
-// ==========================================
-
-function ocultarResumen() {
-
-  resumenReserva.classList.add(
-    "oculto"
-  );
-
-
-  btnConfirmar.disabled =
-    true;
-
-}
-
-
-// ==========================================
-// MINUTOS -> HORA
-// ==========================================
-
-function minutosAHora(
-  minutosTotales
-) {
-
-  const horas =
-    Math.floor(
-      minutosTotales / 60
-    );
-
-
-  const minutos =
-    minutosTotales % 60;
-
-
-  return (
-    String(horas)
-      .padStart(2, "0")
-
-    +
-
-    ":"
-
-    +
-
-    String(minutos)
-      .padStart(2, "0")
-  );
-
-}
-
-
-// ==========================================
-// FECHA LOCAL
-// ==========================================
 
 function crearFechaLocal(
   fechaTexto
@@ -1191,41 +1713,173 @@ function crearFechaLocal(
 
 
   return new Date(
-    Number(partes[0]),
-    Number(partes[1]) - 1,
-    Number(partes[2])
+
+    Number(
+      partes[0]
+    ),
+
+    Number(
+      partes[1]
+    ) - 1,
+
+    Number(
+      partes[2]
+    )
+
   );
 
 }
 
 
-// ==========================================
-// CERRAR SESIÓN
-// ==========================================
+function formatearFecha(
+  fechaTexto
+) {
 
-btnCerrarSesion.addEventListener(
-  "click",
-  async () => {
+  return crearFechaLocal(
+    fechaTexto
+  ).toLocaleDateString(
+    "es-CL",
+    {
 
-    try {
+      weekday:
+        "long",
 
-      await signOut(
-        auth
-      );
+      day:
+        "2-digit",
 
+      month:
+        "long",
 
-      window.location.href =
-        "index.html";
-
-
-    } catch (error) {
-
-      console.error(
-        "Error cerrando sesión:",
-        error
-      );
+      year:
+        "numeric"
 
     }
+  );
+
+}
+
+
+// ==================================================
+// HORAS
+// ==================================================
+
+function minutosAHora(
+  total
+) {
+
+  const horas =
+    Math.floor(
+      total / 60
+    );
+
+
+  const minutos =
+    total % 60;
+
+
+  return (
+    String(
+      horas
+    ).padStart(
+      2,
+      "0"
+    )
+
+    +
+
+    ":"
+
+    +
+
+    String(
+      minutos
+    ).padStart(
+      2,
+      "0"
+    )
+  );
+
+}
+
+
+// ==================================================
+// DURACIÓN
+// ==================================================
+
+function formatearDuracion(
+  minutos
+) {
+
+  const horas =
+    Math.floor(
+      minutos / 60
+    );
+
+
+  const resto =
+    minutos % 60;
+
+
+  if (
+    horas === 0
+  ) {
+
+    return `${resto} min`;
 
   }
-);
+
+
+  if (
+    resto === 0
+  ) {
+
+    return (
+      horas === 1
+        ? "1 hora"
+        : `${horas} horas`
+    );
+
+  }
+
+
+  return `${horas} h ${resto} min`;
+
+}
+
+
+// ==================================================
+// PRECIO
+// ==================================================
+
+function formatearPrecio(
+  precio,
+  desde
+) {
+
+  const valor =
+    new Intl.NumberFormat(
+      "es-CL",
+      {
+
+        style:
+          "currency",
+
+        currency:
+          "CLP",
+
+        maximumFractionDigits:
+          0
+
+      }
+    ).format(
+      Number(
+        precio
+      )
+    );
+
+
+  return desde
+    ? `Desde ${valor}`
+    : valor;
+
+}
