@@ -89,12 +89,12 @@ const servicios = {
 
 
 // ==========================================
-// HORARIO DE JAVIERA
+// HORARIO DE JAVII
 // ==========================================
 
 const ESTILISTA_ID = "javiera";
 
-const ESTILISTA_NOMBRE = "Javiera";
+const ESTILISTA_NOMBRE = "Javii";
 
 
 // 10:30
@@ -311,7 +311,7 @@ fechaInput.addEventListener(
     ) {
 
       alert(
-        "Javiera atiende solamente de martes a sábado."
+        "Javii atiende solamente de martes a sábado."
       );
 
 
