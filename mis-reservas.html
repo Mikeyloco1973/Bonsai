@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Mis reservas | Bonsai</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+
+<body class="pagina-reservas">
+
+<header class="header">
+
+  <a href="index.html"
+     class="logo logo-link">
+
+    Bonsai
+
+  </a>
+
+
+  <nav class="nav">
+
+    <a href="index.html">
+      Inicio
+    </a>
+
+    <a href="agenda.html">
+      Agendar hora
+    </a>
+
+    <button
+      type="button"
+      class="btn-cerrar-sesion"
+      id="btnCerrarSesion"
+    >
+      Cerrar sesión
+    </button>
+
+  </nav>
+
+</header>
+
+
+<main class="reservas-main">
+
+  <div class="reservas-contenedor">
+
+    <!-- ENCABEZADO -->
+
+    <section class="reservas-encabezado">
+
+      <p class="subtitulo">
+        MI CUENTA
+      </p>
+
+      <h1>Mis reservas</h1>
+
+      <p id="saludoReservas">
+        Consulta y administra tus horas en Bonsai.
+      </p>
+
+      <a
+        href="agenda.html"
+        class="btn-principal btn-nueva-reserva"
+      >
+        + Agendar nueva hora
+      </a>
+
+    </section>
+
+
+    <!-- MENSAJE CARGANDO -->
+
+    <p
+      class="estado-carga"
+      id="estadoCarga"
+    >
+      Cargando tus reservas...
+    </p>
+
+
+    <!-- PROXIMAS RESERVAS -->
+
+    <section
+      class="grupo-reservas"
+      id="seccionProximas"
+    >
+
+      <h2>Próximas reservas</h2>
+
+      <div
+        class="reservas-grid"
+        id="proximasReservas"
+      >
+      </div>
+
+    </section>
+
+
+    <!-- HISTORIAL -->
+
+    <section
+      class="grupo-reservas"
+      id="seccionHistorial"
+    >
+
+      <h2>Historial</h2>
+
+      <div
+        class="reservas-grid"
+        id="historialReservas"
+      >
+      </div>
+
+    </section>
+
+  </div>
+
+</main>
+
+
+<footer>
+
+  <h3>Bonsai</h3>
+
+  <p>Salón de Estilismo</p>
+
+  <p class="copyright">
+    © 2026 Bonsai. Todos los derechos reservados.
+  </p>
+
+</footer>
+
+
+<script
+  type="module"
+  src="js/mis-reservas.js">
+</script>
+
+</body>
+
+</html>

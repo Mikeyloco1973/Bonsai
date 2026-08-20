@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Crear cuenta | Bonsai</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="pagina-auth">
+
+<header class="header">
+
+  <a href="index.html" class="logo logo-link">
+    Bonsai
+  </a>
+
+  <nav class="nav">
+    <a href="index.html">
+      Volver al inicio
+    </a>
+  </nav>
+
+</header>
+
+
+<main class="auth-main">
+
+  <section class="auth-contenedor registro-contenedor">
+
+    <div class="auth-logo">
+      Bonsai
+    </div>
+
+    <p class="auth-subtitulo">
+      SALÓN DE ESTILISMO
+    </p>
+
+    <h1>Crear cuenta</h1>
+
+    <p class="auth-descripcion">
+      Regístrate para poder reservar y administrar tus horas.
+    </p>
+
+
+    <form class="auth-formulario" id="formRegistro">
+
+      <!-- NOMBRE Y APELLIDO -->
+
+      <div class="form-fila">
+
+        <div class="campo-formulario">
+
+          <label for="nombre">
+            Nombre
+          </label>
+
+          <input
+            type="text"
+            id="nombre"
+            name="nombre"
+            placeholder="Tu nombre"
+            autocomplete="given-name"
+            required
+          >
+
+        </div>
+
+
+        <div class="campo-formulario">
+
+          <label for="apellido">
+            Apellido
+          </label>
+
+          <input
+            type="text"
+            id="apellido"
+            name="apellido"
+            placeholder="Tu apellido"
+            autocomplete="family-name"
+            required
+          >
+
+        </div>
+
+      </div>
+
+
+      <!-- TELEFONO -->
+
+      <div class="campo-formulario">
+
+        <label for="telefono">
+          Teléfono
+        </label>
+
+        <input
+          type="tel"
+          id="telefono"
+          name="telefono"
+          placeholder="+56 9 1234 5678"
+          autocomplete="tel"
+          required
+        >
+
+      </div>
+
+
+      <!-- CORREO -->
+
+      <div class="campo-formulario">
+
+        <label for="emailRegistro">
+          Correo electrónico
+        </label>
+
+        <input
+          type="email"
+          id="emailRegistro"
+          name="email"
+          placeholder="correo@ejemplo.cl"
+          autocomplete="email"
+          required
+        >
+
+      </div>
+
+
+      <!-- CONTRASEÑA -->
+
+      <div class="campo-formulario">
+
+        <label for="passwordRegistro">
+          Contraseña
+        </label>
+
+        <input
+          type="password"
+          id="passwordRegistro"
+          name="password"
+          placeholder="Mínimo 6 caracteres"
+          minlength="6"
+          autocomplete="new-password"
+          required
+        >
+
+      </div>
+
+
+      <!-- REPETIR CONTRASEÑA -->
+
+      <div class="campo-formulario">
+
+        <label for="confirmarPassword">
+          Confirmar contraseña
+        </label>
+
+        <input
+          type="password"
+          id="confirmarPassword"
+          name="confirmarPassword"
+          placeholder="Repite tu contraseña"
+          minlength="6"
+          autocomplete="new-password"
+          required
+        >
+
+      </div>
+
+
+      <!-- TERMINOS -->
+
+      <label class="terminos-registro">
+
+        <input
+          type="checkbox"
+          id="aceptarTerminos"
+          required
+        >
+
+        <span>
+                    Confirmo que los datos ingresados son correctos.
+                </span>
+
+      </label>
+
+
+      <!-- BOTÓN -->
+
+      <button
+        type="submit"
+        class="btn-auth"
+      >
+        Crear cuenta
+      </button>
+
+    </form>
+
+
+    <div class="auth-registro">
+
+      <p>
+        ¿Ya tienes una cuenta?
+      </p>
+
+      <a href="login.html">
+        Iniciar sesión
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer class="footer-auth">
+
+  <p>
+    © 2026 Bonsai · Salón de Estilismo
+  </p>
+
+</footer>
+
+<script type="module" src="js/registro.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Iniciar sesión | Bonsai</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="pagina-auth">
+
+<header class="header">
+
+  <a href="index.html" class="logo logo-link">
+    Bonsai
+  </a>
+
+  <nav class="nav">
+    <a href="index.html">
+      Volver al inicio
+    </a>
+  </nav>
+
+</header>
+
+
+<main class="auth-main">
+
+  <section class="auth-contenedor">
+
+    <div class="auth-logo">
+      Bonsai
+    </div>
+
+    <p class="auth-subtitulo">
+      SALÓN DE ESTILISMO
+    </p>
+
+    <h1>Bienvenido</h1>
+
+    <p class="auth-descripcion">
+      Inicia sesión para reservar y administrar tus horas.
+    </p>
+
+
+    <form class="auth-formulario" id="formLogin">
+
+      <div class="campo-formulario">
+
+        <label for="email">
+          Correo electrónico
+        </label>
+
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="correo@ejemplo.cl"
+          required
+        >
+
+      </div>
+
+
+      <div class="campo-formulario">
+
+        <label for="password">
+          Contraseña
+        </label>
+
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Ingresa tu contraseña"
+          required
+        >
+
+      </div>
+
+
+      <div class="opciones-login">
+
+        <label class="recordarme">
+
+          <input
+            type="checkbox"
+            id="recordarme"
+          >
+
+          Recordarme
+
+        </label>
+
+        <a
+          href="#"
+          class="olvide-password"
+          id="recuperarPassword"
+        >
+          ¿Olvidaste tu contraseña?
+        </a>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn-auth"
+      >
+        Iniciar sesión
+      </button>
+
+    </form>
+
+
+    <div class="auth-registro">
+
+      <p>
+        ¿Aún no tienes una cuenta?
+      </p>
+
+      <a href="registro.html">
+        Crear una cuenta
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<footer class="footer-auth">
+
+  <p>
+    © 2026 Bonsai · Salón de Estilismo
+  </p>
+
+</footer>
+
+<script type="module" src="js/login.js"></script>
+
+</body>
+</html>

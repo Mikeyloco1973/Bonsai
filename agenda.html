@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Agendar hora | Bonsai</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="pagina-agenda">
+
+<header class="header">
+
+  <a href="index.html" class="logo logo-link">
+    Bonsai
+  </a>
+
+  <nav class="nav">
+    <a href="index.html">Inicio</a>
+
+    <button
+      type="button"
+      class="btn-cerrar-sesion"
+      id="btnCerrarSesion"
+    >
+      Cerrar sesión
+    </button>
+  </nav>
+
+</header>
+
+
+<main class="agenda-main">
+
+  <section class="agenda-contenedor">
+
+    <div class="agenda-encabezado">
+
+      <p class="subtitulo">
+        RESERVA TU HORA
+      </p>
+
+      <h1>Agenda con Javiera</h1>
+
+      <p>
+        Selecciona el servicio, la fecha y la hora que más te acomode.
+      </p>
+
+    </div>
+
+
+    <div class="agenda-info-estilista">
+
+      <div>
+                <span class="agenda-label">
+                    Estilista
+                </span>
+
+        <strong>
+          Javiera
+        </strong>
+      </div>
+
+      <div>
+                <span class="agenda-label">
+                    Horario
+                </span>
+
+        <strong>
+          Martes a sábado · 10:30 a 21:00
+        </strong>
+      </div>
+
+    </div>
+
+
+    <form id="formAgenda">
+
+      <!-- SERVICIO -->
+
+      <div class="campo-formulario">
+
+        <label for="servicio">
+          Servicio
+        </label>
+
+        <select id="servicio" required>
+
+          <option value="">
+            Selecciona un servicio
+          </option>
+
+          <option value="corte">
+            Corte · $40.000 · 1 h 30 min
+          </option>
+
+          <option value="corte-tratamiento">
+            Corte + tratamiento · $75.000 · 1 h 30 min
+          </option>
+
+          <option value="tratamiento">
+            Tratamiento · $45.000 · 1 h 30 min
+          </option>
+
+          <option value="botox">
+            Botox · Desde $60.000 · 3 horas
+          </option>
+
+          <option value="alisado">
+            Alisado · Desde $80.000 · 3 horas
+          </option>
+
+          <option value="color-global">
+            Color global · Desde $60.000 · 3 horas
+          </option>
+
+          <option value="iluminaciones">
+            Iluminaciones · Desde $130.000 · 5 horas
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <!-- DETALLE DEL SERVICIO -->
+
+      <div
+        class="detalle-servicio oculto"
+        id="detalleServicio"
+      >
+
+        <div>
+
+          <span>Precio</span>
+
+          <strong id="precioServicio">
+            -
+          </strong>
+
+        </div>
+
+        <div>
+
+          <span>Duración aproximada</span>
+
+          <strong id="duracionServicio">
+            -
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- FECHA -->
+
+      <div class="campo-formulario">
+
+        <label for="fechaReserva">
+          Fecha
+        </label>
+
+        <input
+          type="date"
+          id="fechaReserva"
+          required
+        >
+
+        <small class="ayuda-campo">
+          Javiera atiende de martes a sábado.
+        </small>
+
+      </div>
+
+
+      <!-- HORAS -->
+
+      <div class="seccion-horas">
+
+        <label>
+          Horas disponibles
+        </label>
+
+        <p
+          class="mensaje-horas"
+          id="mensajeHoras"
+        >
+          Selecciona primero un servicio y una fecha.
+        </p>
+
+        <div
+          class="horas-disponibles"
+          id="horasDisponibles"
+        >
+        </div>
+
+      </div>
+
+
+      <!-- RESUMEN -->
+
+      <div
+        class="resumen-reserva oculto"
+        id="resumenReserva"
+      >
+
+        <h3>Resumen de tu reserva</h3>
+
+        <div class="resumen-fila">
+
+          <span>Servicio</span>
+
+          <strong id="resumenServicio">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="resumen-fila">
+
+          <span>Fecha</span>
+
+          <strong id="resumenFecha">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="resumen-fila">
+
+          <span>Hora</span>
+
+          <strong id="resumenHora">
+            -
+          </strong>
+
+        </div>
+
+
+        <div class="resumen-fila">
+
+          <span>Estilista</span>
+
+          <strong>
+            Javiera
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <button
+        type="submit"
+        class="btn-auth btn-confirmar-reserva"
+        id="btnConfirmarReserva"
+        disabled
+      >
+        Confirmar reserva
+      </button>
+
+    </form>
+
+  </section>
+
+</main>
+
+
+<footer>
+
+  <h3>Bonsai</h3>
+
+  <p>Salón de Estilismo</p>
+
+</footer>
+
+
+<script
+  type="module"
+  src="js/agenda.js">
+</script>
+
+</body>
+
+</html>

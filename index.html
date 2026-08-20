@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Bonsai | Salón de Estilismo</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header class="header">
+
+  <div class="logo">
+    Bonsai
+  </div>
+
+  <nav class="nav">
+
+    <a href="#inicio">Inicio</a>
+
+    <a href="#servicios">Servicios</a>
+
+    <a href="#nosotros">Nosotros</a>
+
+    <a href="#contacto">Contacto</a>
+
+
+    <!-- USUARIO SIN SESIÓN -->
+
+    <a
+      href="login.html"
+      class="btn-login"
+      id="btnLogin"
+    >
+      Iniciar sesión
+    </a>
+
+
+    <!-- USUARIO CON SESIÓN -->
+
+    <div
+      class="sesion-activa oculto"
+      id="sesionActiva"
+    >
+
+    <span id="saludoUsuario">
+        Hola
+    </span>
+
+      <a
+        href="mis-reservas.html"
+        class="btn-mi-cuenta"
+      >
+        Mis reservas
+      </a>
+
+      <button
+        type="button"
+        class="btn-cerrar-sesion"
+        id="btnCerrarSesion"
+      >
+        Cerrar sesión
+      </button>
+
+    </div>
+
+  </nav>
+
+</header>
+
+<main>
+
+  <section class="hero" id="inicio">
+
+    <div class="hero-contenido">
+
+      <p class="subtitulo">
+        SALÓN DE ESTILISMO
+      </p>
+
+      <h1>
+        Tu estilo,<br>
+        nuestra pasión
+      </h1>
+
+      <p class="descripcion">
+        Reserva tu hora en Bonsai y disfruta de una experiencia
+        pensada especialmente para ti.
+      </p>
+
+      <div class="hero-botones">
+
+        <a
+          href="#"
+          class="btn-principal"
+          id="btnAgendar"
+        >
+          Agendar hora
+        </a>
+
+        <a href="#servicios" class="btn-secundario">
+          Ver servicios
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="servicios" id="servicios">
+
+    <div class="titulo-seccion">
+
+      <p>NUESTROS SERVICIOS</p>
+
+      <h2>Encuentra tu estilo</h2>
+
+      <span>
+                Conoce algunos de los servicios que Bonsai tiene para ti.
+            </span>
+
+    </div>
+
+    <div class="contenedor-servicios">
+
+      <article class="servicio">
+        <h3>Corte</h3>
+        <p>Servicio de corte personalizado.</p>
+        <span class="precio">$40.000</span>
+        <span class="duracion">Duración aprox: 1 h 30 min</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Corte + tratamiento</h3>
+        <p>Corte acompañado de tratamiento capilar.</p>
+        <span class="precio">$75.000</span>
+        <span class="duracion">Duración aprox: 1 h 30 min</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Tratamiento</h3>
+        <p>Tratamiento capilar para el cuidado del cabello.</p>
+        <span class="precio">$45.000</span>
+        <span class="duracion">Duración aprox: 1 h 30 min</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Botox</h3>
+        <p>Tratamiento de botox capilar.</p>
+        <span class="precio">Desde $60.000</span>
+        <span class="duracion">Duración aprox: 3 horas</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Alisado</h3>
+        <p>Servicio de alisado profesional.</p>
+        <span class="precio">Desde $80.000</span>
+        <span class="duracion">Duración aprox: 3 horas</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Color global</h3>
+        <p>Coloración completa del cabello.</p>
+        <span class="precio">Desde $60.000</span>
+        <span class="duracion">Duración aprox: 3 horas</span>
+      </article>
+
+      <article class="servicio">
+        <h3>Iluminaciones</h3>
+        <p>Servicio de iluminaciones para dar dimensión y luminosidad.</p>
+        <span class="precio">Desde $130.000</span>
+        <span class="duracion">Duración aprox: 5 horas</span>
+      </article>
+
+    </div>
+
+  </section>
+  <section class="nosotros" id="nosotros">
+
+    <div class="nosotros-contenido">
+
+      <div class="nosotros-info">
+
+        <p class="subtitulo">CONÓCENOS</p>
+
+        <h2>Tu estilista</h2>
+
+        <h3>Javiera</h3>
+
+        <p class="texto-nosotros">
+          En Bonsai queremos que cada visita sea una experiencia
+          personalizada. Javiera estará encargada de ayudarte a
+          encontrar el estilo que mejor se adapte a ti.
+        </p>
+
+        <div class="horario">
+
+          <h4>Horario de atención</h4>
+
+          <p>
+            Martes a sábado
+          </p>
+
+          <strong>
+            10:30 a 21:00 hrs.
+          </strong>
+
+          <span>
+                    Domingo y lunes cerrado
+                </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+</main>
+
+<footer id="contacto">
+
+  <h3>Bonsai</h3>
+
+  <p>Salón de Estilismo</p>
+
+  <p class="copyright">
+    © 2026 Bonsai. Todos los derechos reservados.
+  </p>
+
+</footer>
+
+<script type="module" src="js/app.js"></script>
+
+</body>
+</html>

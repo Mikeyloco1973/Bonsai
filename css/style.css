@@ -1,0 +1,1942 @@
+/* =========================
+   CONFIGURACIÓN GENERAL
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f8f7f3;
+  color: #252525;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+  height: 80px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 8%;
+
+  background-color: #ffffff;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  color: #344c3d;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+
+  gap: 30px;
+}
+
+.nav a {
+  text-decoration: none;
+
+  color: #333333;
+
+  font-size: 15px;
+
+  transition: 0.3s;
+}
+
+.nav a:hover {
+  color: #607d68;
+}
+
+
+/* Botón iniciar sesión */
+
+.nav .btn-login {
+  background-color: #344c3d;
+
+  color: white;
+
+  padding: 12px 20px;
+
+  border-radius: 5px;
+}
+
+.nav .btn-login:hover {
+  background-color: #516b59;
+
+  color: white;
+}
+
+
+/* =========================
+   PORTADA / HERO
+========================= */
+
+.hero {
+  min-height: 650px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 80px 10%;
+
+  background: linear-gradient(
+    120deg,
+    #e9eee9,
+    #f8f7f3
+  );
+}
+
+.hero-contenido {
+  max-width: 650px;
+}
+
+.subtitulo {
+  color: #607d68;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  letter-spacing: 3px;
+
+  margin-bottom: 20px;
+}
+
+.hero h1 {
+  font-size: 68px;
+
+  line-height: 1.05;
+
+  margin-bottom: 25px;
+
+  color: #26382d;
+}
+
+.descripcion {
+  max-width: 550px;
+
+  font-size: 18px;
+
+  line-height: 1.7;
+
+  color: #666666;
+
+  margin-bottom: 35px;
+}
+
+
+/* =========================
+   BOTONES PORTADA
+========================= */
+
+.hero-botones {
+  display: flex;
+
+  gap: 15px;
+}
+
+.btn-principal,
+.btn-secundario {
+  display: inline-block;
+
+  text-decoration: none;
+
+  padding: 15px 25px;
+
+  border-radius: 5px;
+
+  font-size: 15px;
+
+  transition: 0.3s;
+}
+
+
+/* Botón principal */
+
+.btn-principal {
+  color: white;
+
+  background-color: #344c3d;
+}
+
+.btn-principal:hover {
+  background-color: #516b59;
+}
+
+
+/* Botón secundario */
+
+.btn-secundario {
+  color: #344c3d;
+
+  border: 1px solid #344c3d;
+}
+
+.btn-secundario:hover {
+  background-color: #344c3d;
+
+  color: white;
+}
+
+
+/* =========================
+   SERVICIOS
+========================= */
+
+.servicios {
+  padding: 100px 8%;
+
+  background-color: white;
+}
+
+.titulo-seccion {
+  text-align: center;
+
+  margin-bottom: 60px;
+}
+
+.titulo-seccion p {
+  color: #607d68;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+  letter-spacing: 3px;
+
+  margin-bottom: 15px;
+}
+
+.titulo-seccion h2 {
+  font-size: 38px;
+
+  color: #26382d;
+
+  margin-bottom: 15px;
+}
+
+.titulo-seccion span {
+  color: #777777;
+}
+
+
+/* =========================
+   CONTENEDOR SERVICIOS
+========================= */
+
+.contenedor-servicios {
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 25px;
+}
+
+
+/* Centrar el último servicio:
+   Iluminaciones */
+
+.contenedor-servicios .servicio:last-child {
+  grid-column: 2;
+}
+
+
+/* =========================
+   TARJETA SERVICIO
+========================= */
+
+.servicio {
+  padding: 35px;
+
+  background-color: #f8f7f3;
+
+  border-radius: 8px;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.servicio:hover {
+  transform: translateY(-8px);
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.servicio h3 {
+  font-size: 24px;
+
+  margin-bottom: 15px;
+
+  color: #344c3d;
+}
+
+.servicio p {
+  color: #666666;
+
+  line-height: 1.6;
+
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   PRECIO SERVICIO
+========================= */
+
+.precio {
+  display: block;
+
+  font-size: 18px;
+
+  font-weight: bold;
+
+  color: #344c3d;
+
+  margin-bottom: 10px;
+}
+
+
+/* =========================
+   DURACIÓN SERVICIO
+========================= */
+
+.duracion {
+  display: block;
+
+  font-size: 13px;
+
+  font-weight: normal;
+
+  color: #888888;
+}
+
+
+/* =========================
+   NOSOTROS
+========================= */
+
+.nosotros {
+  padding: 100px 8%;
+
+  background-color: #f2f4f0;
+}
+
+.nosotros-contenido {
+  max-width: 1000px;
+
+  margin: 0 auto;
+}
+
+.nosotros-info {
+  text-align: center;
+}
+
+.nosotros-info h2 {
+  font-size: 40px;
+
+  color: #26382d;
+
+  margin-bottom: 10px;
+}
+
+.nosotros-info h3 {
+  font-size: 28px;
+
+  color: #607d68;
+
+  margin-bottom: 25px;
+}
+
+.texto-nosotros {
+  max-width: 650px;
+
+  margin: 0 auto 40px;
+
+  color: #666666;
+
+  font-size: 17px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================
+   HORARIO
+========================= */
+
+.horario {
+  max-width: 420px;
+
+  margin: 0 auto;
+
+  padding: 30px;
+
+  background-color: white;
+
+  border-radius: 8px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.horario h4 {
+  font-size: 21px;
+
+  color: #26382d;
+
+  margin-bottom: 20px;
+}
+
+.horario p {
+  color: #666666;
+
+  margin-bottom: 8px;
+}
+
+.horario strong {
+  display: block;
+
+  color: #344c3d;
+
+  font-size: 20px;
+
+  margin-bottom: 15px;
+}
+
+.horario span {
+  display: block;
+
+  color: #999999;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+footer {
+  background-color: #26382d;
+
+  color: white;
+
+  text-align: center;
+
+  padding: 50px 20px;
+}
+
+footer h3 {
+  font-size: 28px;
+
+  margin-bottom: 8px;
+}
+
+footer p {
+  color: #cfd7d1;
+}
+
+.copyright {
+  margin-top: 25px;
+
+  font-size: 13px;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1000px) {
+
+  .contenedor-servicios {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Iluminaciones queda centrado
+     ocupando el espacio de ambas columnas */
+
+  .contenedor-servicios .servicio:last-child {
+    grid-column: 1 / -1;
+
+    width: calc(50% - 12.5px);
+
+    justify-self: center;
+  }
+
+}
+
+
+/* =========================
+   CELULAR
+========================= */
+
+@media (max-width: 800px) {
+
+  /* HEADER */
+
+  .header {
+    padding: 0 5%;
+  }
+
+  .logo {
+    font-size: 25px;
+  }
+
+  .nav {
+    gap: 10px;
+  }
+
+  /* Por ahora ocultamos los enlaces
+     y dejamos visible Iniciar sesión */
+
+  .nav a:not(.btn-login) {
+    display: none;
+  }
+
+  .nav .btn-login {
+    padding: 10px 15px;
+
+    font-size: 13px;
+  }
+
+
+  /* =========================
+     HERO
+  ========================= */
+
+  .hero {
+    min-height: 550px;
+
+    padding: 60px 7%;
+  }
+
+  .hero h1 {
+    font-size: 45px;
+  }
+
+  .descripcion {
+    font-size: 16px;
+  }
+
+  .hero-botones {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+
+  /* =========================
+     SERVICIOS
+  ========================= */
+
+  .servicios {
+    padding: 70px 7%;
+  }
+
+  .titulo-seccion {
+    margin-bottom: 40px;
+  }
+
+  .titulo-seccion h2 {
+    font-size: 32px;
+  }
+
+  .contenedor-servicios {
+    grid-template-columns: 1fr;
+
+    gap: 20px;
+  }
+
+  .contenedor-servicios .servicio:last-child {
+    grid-column: 1;
+
+    width: 100%;
+  }
+
+  .servicio {
+    width: 100%;
+
+    padding: 30px;
+  }
+
+
+  /* =========================
+     NOSOTROS
+  ========================= */
+
+  .nosotros {
+    padding: 70px 7%;
+  }
+
+  .nosotros-info h2 {
+    font-size: 32px;
+  }
+
+  .nosotros-info h3 {
+    font-size: 24px;
+  }
+
+  .texto-nosotros {
+    font-size: 16px;
+  }
+
+  .horario {
+    width: 100%;
+
+    padding: 25px;
+  }
+
+}
+
+
+/* =========================
+   CELULARES PEQUEÑOS
+========================= */
+
+@media (max-width: 480px) {
+
+  .header {
+    height: 70px;
+  }
+
+  .logo {
+    font-size: 23px;
+  }
+
+  .nav .btn-login {
+    padding: 9px 12px;
+
+    font-size: 12px;
+  }
+
+  .hero {
+    min-height: 500px;
+
+    padding: 50px 6%;
+  }
+
+  .hero h1 {
+    font-size: 38px;
+  }
+
+  .subtitulo {
+    font-size: 12px;
+  }
+
+  .btn-principal,
+  .btn-secundario {
+    width: 100%;
+
+    text-align: center;
+  }
+
+  .servicios {
+    padding: 60px 6%;
+  }
+
+  .servicio {
+    padding: 25px;
+  }
+
+  .servicio h3 {
+    font-size: 21px;
+  }
+
+  .titulo-seccion h2 {
+    font-size: 28px;
+  }
+
+  .nosotros {
+    padding: 60px 6%;
+  }
+
+}
+
+/* =========================
+   LOGIN Y REGISTRO
+========================= */
+
+.pagina-auth {
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: linear-gradient(
+    135deg,
+    #e9eee9,
+    #f8f7f3
+  );
+}
+
+
+/* Logo como enlace */
+
+.logo-link {
+  text-decoration: none;
+}
+
+
+/* =========================
+   CONTENEDOR AUTH
+========================= */
+
+.auth-main {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 60px 20px;
+}
+
+.auth-contenedor {
+  width: 100%;
+  max-width: 450px;
+
+  padding: 45px;
+
+  background-color: #ffffff;
+
+  border-radius: 12px;
+
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================
+   TITULOS LOGIN
+========================= */
+
+.auth-logo {
+  text-align: center;
+
+  color: #344c3d;
+
+  font-size: 30px;
+
+  font-weight: bold;
+
+  letter-spacing: 2px;
+
+  margin-bottom: 10px;
+}
+
+.auth-subtitulo {
+  text-align: center;
+
+  color: #607d68;
+
+  font-size: 11px;
+
+  font-weight: bold;
+
+  letter-spacing: 3px;
+
+  margin-bottom: 30px;
+}
+
+.auth-contenedor h1 {
+  text-align: center;
+
+  color: #26382d;
+
+  font-size: 32px;
+
+  margin-bottom: 10px;
+}
+
+.auth-descripcion {
+  text-align: center;
+
+  color: #777777;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+  margin-bottom: 35px;
+}
+
+
+/* =========================
+   FORMULARIO
+========================= */
+
+.auth-formulario {
+  width: 100%;
+}
+
+.campo-formulario {
+  margin-bottom: 20px;
+}
+
+.campo-formulario label {
+  display: block;
+
+  color: #344c3d;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  margin-bottom: 8px;
+}
+
+.campo-formulario input {
+  width: 100%;
+
+  height: 50px;
+
+  padding: 0 15px;
+
+  border: 1px solid #d9ddd9;
+
+  border-radius: 6px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  transition: 0.3s;
+}
+
+.campo-formulario input:focus {
+  border-color: #607d68;
+
+  box-shadow: 0 0 0 3px rgba(96, 125, 104, 0.12);
+}
+
+
+/* =========================
+   OPCIONES LOGIN
+========================= */
+
+.opciones-login {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+
+  font-size: 13px;
+}
+
+.recordarme {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #666666;
+
+  cursor: pointer;
+}
+
+.recordarme input {
+  accent-color: #344c3d;
+}
+
+.olvide-password {
+  text-decoration: none;
+
+  color: #607d68;
+}
+
+.olvide-password:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   BOTON LOGIN / REGISTRO
+========================= */
+
+.btn-auth {
+  width: 100%;
+
+  height: 52px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  background-color: #344c3d;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.btn-auth:hover {
+  background-color: #516b59;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================
+   ENLACE REGISTRO
+========================= */
+
+.auth-registro {
+  text-align: center;
+
+  margin-top: 30px;
+
+  padding-top: 25px;
+
+  border-top: 1px solid #eeeeee;
+}
+
+.auth-registro p {
+  color: #777777;
+
+  font-size: 14px;
+
+  margin-bottom: 8px;
+}
+
+.auth-registro a {
+  color: #344c3d;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  text-decoration: none;
+}
+
+.auth-registro a:hover {
+  text-decoration: underline;
+}
+
+
+/* =========================
+   FOOTER LOGIN
+========================= */
+
+.footer-auth {
+  padding: 25px;
+
+  text-align: center;
+
+  background-color: transparent;
+}
+
+.footer-auth p {
+  color: #777777;
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   LOGIN RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+  .auth-main {
+    padding: 30px 15px;
+  }
+
+  .auth-contenedor {
+    padding: 35px 25px;
+  }
+
+  .auth-contenedor h1 {
+    font-size: 28px;
+  }
+
+  .opciones-login {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+}
+
+/* =========================
+   REGISTRO
+========================= */
+
+.registro-contenedor {
+  max-width: 560px;
+}
+
+
+/* Nombre y apellido en dos columnas */
+
+.form-fila {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+}
+
+
+/* Checkbox registro */
+
+.terminos-registro {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  margin-bottom: 25px;
+
+  color: #666666;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  cursor: pointer;
+}
+
+.terminos-registro input {
+  margin-top: 3px;
+
+  accent-color: #344c3d;
+}
+
+
+/* =========================
+   REGISTRO CELULAR
+========================= */
+
+@media (max-width: 600px) {
+
+  .form-fila {
+    grid-template-columns: 1fr;
+
+    gap: 0;
+  }
+
+}
+
+/* =========================
+   SESIÓN DE USUARIO
+========================= */
+
+.oculto {
+  display: none !important;
+}
+
+
+/* Usuario conectado */
+
+.sesion-activa {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+
+/* Saludo */
+
+#saludoUsuario {
+  color: #344c3d;
+
+  font-size: 14px;
+
+  font-weight: bold;
+
+  white-space: nowrap;
+}
+
+
+/* Botón cerrar sesión */
+
+.btn-cerrar-sesion {
+  border: 1px solid #344c3d;
+
+  background-color: transparent;
+
+  color: #344c3d;
+
+  padding: 11px 16px;
+
+  border-radius: 5px;
+
+  font-size: 13px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.btn-cerrar-sesion:hover {
+  background-color: #344c3d;
+
+  color: white;
+}
+
+
+/* =========================
+   SESIÓN EN CELULAR
+========================= */
+
+@media (max-width: 800px) {
+
+  .sesion-activa {
+    gap: 8px;
+  }
+
+  #saludoUsuario {
+    font-size: 12px;
+  }
+
+  .btn-cerrar-sesion {
+    padding: 9px 11px;
+
+    font-size: 11px;
+  }
+
+}
+
+/* =========================
+   PÁGINA AGENDA
+========================= */
+
+.pagina-agenda {
+  background-color: #f4f5f2;
+}
+
+.agenda-main {
+  min-height: calc(100vh - 80px);
+
+  padding: 70px 20px;
+}
+
+.agenda-contenedor {
+  width: 100%;
+  max-width: 750px;
+
+  margin: 0 auto;
+
+  padding: 45px;
+
+  background-color: white;
+
+  border-radius: 12px;
+
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================
+   ENCABEZADO AGENDA
+========================= */
+
+.agenda-encabezado {
+  text-align: center;
+
+  margin-bottom: 35px;
+}
+
+.agenda-encabezado h1 {
+  color: #26382d;
+
+  font-size: 36px;
+
+  margin-bottom: 12px;
+}
+
+.agenda-encabezado > p:last-child {
+  color: #777777;
+
+  line-height: 1.6;
+}
+
+
+/* =========================
+   INFORMACIÓN ESTILISTA
+========================= */
+
+.agenda-info-estilista {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+  padding: 22px;
+
+  margin-bottom: 35px;
+
+  background-color: #f2f4f0;
+
+  border-radius: 8px;
+}
+
+.agenda-info-estilista div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.agenda-label {
+  color: #888888;
+
+  font-size: 12px;
+
+  text-transform: uppercase;
+
+  letter-spacing: 1px;
+}
+
+.agenda-info-estilista strong {
+  color: #344c3d;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   SELECT
+========================= */
+
+.campo-formulario select {
+  width: 100%;
+
+  height: 50px;
+
+  padding: 0 15px;
+
+  border: 1px solid #d9ddd9;
+
+  border-radius: 6px;
+
+  background-color: white;
+
+  color: #333333;
+
+  font-size: 15px;
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+.campo-formulario select:focus {
+  border-color: #607d68;
+
+  box-shadow: 0 0 0 3px rgba(96, 125, 104, 0.12);
+}
+
+
+/* =========================
+   AYUDA CAMPO
+========================= */
+
+.ayuda-campo {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #999999;
+
+  font-size: 12px;
+}
+
+
+/* =========================
+   DETALLE SERVICIO
+========================= */
+
+.detalle-servicio {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+
+  padding: 20px;
+
+  background-color: #f8f7f3;
+
+  border-radius: 7px;
+}
+
+.detalle-servicio div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.detalle-servicio span {
+  color: #888888;
+
+  font-size: 12px;
+}
+
+.detalle-servicio strong {
+  color: #344c3d;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   HORAS
+========================= */
+
+.seccion-horas {
+  margin-top: 30px;
+
+  margin-bottom: 35px;
+}
+
+.seccion-horas > label {
+  display: block;
+
+  color: #344c3d;
+
+  font-weight: bold;
+
+  font-size: 14px;
+
+  margin-bottom: 10px;
+}
+
+.mensaje-horas {
+  color: #888888;
+
+  font-size: 13px;
+
+  margin-bottom: 20px;
+}
+
+.horas-disponibles {
+  display: grid;
+
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 10px;
+}
+
+.hora-btn {
+  padding: 12px 5px;
+
+  border: 1px solid #d7ddd8;
+
+  border-radius: 6px;
+
+  background-color: white;
+
+  color: #344c3d;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.hora-btn:hover {
+  background-color: #edf1ed;
+
+  border-color: #607d68;
+}
+
+.hora-seleccionada {
+  background-color: #344c3d;
+
+  border-color: #344c3d;
+
+  color: white;
+}
+
+.hora-seleccionada:hover {
+  background-color: #344c3d;
+
+  color: white;
+}
+
+
+/* =========================
+   RESUMEN RESERVA
+========================= */
+
+.resumen-reserva {
+  margin-bottom: 30px;
+
+  padding: 25px;
+
+  background-color: #f2f4f0;
+
+  border-radius: 8px;
+}
+
+.resumen-reserva h3 {
+  color: #26382d;
+
+  margin-bottom: 20px;
+}
+
+.resumen-fila {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid #dfe4df;
+}
+
+.resumen-fila:last-child {
+  border-bottom: none;
+}
+
+.resumen-fila span {
+  color: #777777;
+
+  font-size: 14px;
+}
+
+.resumen-fila strong {
+  color: #344c3d;
+
+  text-align: right;
+
+  font-size: 14px;
+}
+
+
+/* =========================
+   BOTÓN CONFIRMAR
+========================= */
+
+.btn-confirmar-reserva:disabled {
+  background-color: #aeb8b1;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =========================
+   AGENDA TABLET
+========================= */
+
+@media (max-width: 800px) {
+
+  .agenda-main {
+    padding: 40px 15px;
+  }
+
+  .agenda-contenedor {
+    padding: 35px 25px;
+  }
+
+  .horas-disponibles {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+}
+
+
+/* =========================
+   AGENDA CELULAR
+========================= */
+
+@media (max-width: 600px) {
+
+  .agenda-encabezado h1 {
+    font-size: 29px;
+  }
+
+  .agenda-info-estilista {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-servicio {
+    grid-template-columns: 1fr;
+  }
+
+  .horas-disponibles {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .resumen-fila {
+    flex-direction: column;
+
+    gap: 5px;
+  }
+
+  .resumen-fila strong {
+    text-align: left;
+  }
+
+}
+
+/* =========================
+   BOTÓN MIS RESERVAS
+========================= */
+
+.btn-mi-cuenta {
+  text-decoration: none;
+
+  background-color: #344c3d;
+
+  color: white !important;
+
+  padding: 11px 16px;
+
+  border-radius: 5px;
+
+  font-size: 13px;
+
+  transition: 0.3s;
+}
+
+.btn-mi-cuenta:hover {
+  background-color: #516b59;
+
+  color: white !important;
+}
+
+/* ==================================================
+   PÁGINA MIS RESERVAS
+================================================== */
+
+.pagina-reservas {
+  background-color: #f4f5f2;
+  min-height: 100vh;
+}
+
+
+/* ==================================================
+   CONTENIDO PRINCIPAL
+================================================== */
+
+.reservas-main {
+  min-height: calc(100vh - 80px);
+  padding: 70px 20px;
+}
+
+.reservas-contenedor {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+
+/* ==================================================
+   ENCABEZADO MIS RESERVAS
+================================================== */
+
+.reservas-encabezado {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.reservas-encabezado .subtitulo {
+  margin-bottom: 12px;
+}
+
+.reservas-encabezado h1 {
+  color: #26382d;
+  font-size: 42px;
+  margin-bottom: 12px;
+}
+
+.reservas-encabezado > p:not(.subtitulo) {
+  color: #777777;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+.btn-nueva-reserva {
+  margin-top: 10px;
+}
+
+
+/* ==================================================
+   SECCIONES
+================================================== */
+
+.grupo-reservas {
+  margin-bottom: 60px;
+}
+
+.grupo-reservas h2 {
+  color: #26382d;
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+
+/* ==================================================
+   CONTENEDOR TARJETAS
+================================================== */
+
+.reservas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+
+/* ==================================================
+   TARJETA RESERVA
+================================================== */
+
+.reserva-card {
+  padding: 30px;
+
+  background-color: #ffffff;
+
+  border: 1px solid #e9ece9;
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.05);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.reserva-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ==================================================
+   CABECERA DE LA RESERVA
+================================================== */
+
+.reserva-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+}
+
+.reserva-fecha {
+  display: block;
+
+  color: #607d68;
+
+  font-size: 12px;
+  font-weight: bold;
+
+  letter-spacing: 0.5px;
+
+  margin-bottom: 8px;
+}
+
+.reserva-card h3 {
+  color: #26382d;
+
+  font-size: 24px;
+
+  margin: 0;
+}
+
+
+/* ==================================================
+   ESTADOS
+================================================== */
+
+.estado-reserva {
+  display: inline-block;
+
+  padding: 7px 12px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: bold;
+
+  white-space: nowrap;
+}
+
+.estado-confirmada {
+  background-color: #e4eee6;
+  color: #344c3d;
+}
+
+.estado-cancelada {
+  background-color: #f8e9e9;
+  color: #a04b4b;
+}
+
+.estado-finalizada {
+  background-color: #eeeeee;
+  color: #777777;
+}
+
+
+/* ==================================================
+   INFORMACIÓN DE LA RESERVA
+================================================== */
+
+.reserva-datos {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 24px 20px;
+}
+
+.reserva-datos div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.reserva-datos span {
+  color: #999999;
+
+  font-size: 12px;
+}
+
+.reserva-datos strong {
+  color: #344c3d;
+
+  font-size: 15px;
+}
+
+
+/* ==================================================
+   ACCIONES DE LA RESERVA
+================================================== */
+
+.reserva-acciones {
+  margin-top: 28px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid #eeeeee;
+}
+
+.btn-cancelar-reserva {
+  width: 100%;
+
+  padding: 13px 20px;
+
+  border: 1px solid #a65a5a;
+  border-radius: 6px;
+
+  background-color: transparent;
+
+  color: #a04b4b;
+
+  font-size: 13px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.btn-cancelar-reserva:hover {
+  background-color: #a04b4b;
+  color: white;
+}
+
+.btn-cancelar-reserva:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ==================================================
+   CUANDO NO EXISTEN RESERVAS
+================================================== */
+
+.sin-reservas {
+  grid-column: 1 / -1;
+
+  padding: 45px 30px;
+
+  background-color: #ffffff;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  color: #777777;
+
+  border: 1px solid #eeeeee;
+}
+
+.sin-reservas p {
+  margin-bottom: 25px;
+}
+
+
+/* Si el historial no tiene botón */
+
+#historialReservas .sin-reservas p:only-child {
+  margin-bottom: 0;
+}
+
+
+/* ==================================================
+   MENSAJE CARGANDO
+================================================== */
+
+.estado-carga {
+  text-align: center;
+
+  padding: 35px;
+
+  color: #777777;
+
+  font-size: 15px;
+}
+
+
+/* ==================================================
+   BOTÓN MIS RESERVAS DEL HEADER
+================================================== */
+
+.btn-mi-cuenta {
+  display: inline-block;
+
+  text-decoration: none;
+
+  background-color: #344c3d;
+
+  color: white !important;
+
+  padding: 11px 16px;
+
+  border-radius: 5px;
+
+  font-size: 13px;
+
+  transition: 0.3s;
+}
+
+.btn-mi-cuenta:hover {
+  background-color: #516b59;
+  color: white !important;
+}
+
+
+/* ==================================================
+   TABLET
+================================================== */
+
+@media (max-width: 800px) {
+
+  .reservas-main {
+    padding: 55px 20px;
+  }
+
+  .reservas-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reservas-encabezado h1 {
+    font-size: 36px;
+  }
+
+}
+
+
+/* ==================================================
+   CELULAR
+================================================== */
+
+@media (max-width: 600px) {
+
+  .reservas-main {
+    padding: 40px 15px;
+  }
+
+  .reservas-encabezado {
+    margin-bottom: 45px;
+  }
+
+  .reservas-encabezado h1 {
+    font-size: 32px;
+  }
+
+  .grupo-reservas {
+    margin-bottom: 45px;
+  }
+
+  .grupo-reservas h2 {
+    font-size: 23px;
+  }
+
+  .reserva-card {
+    padding: 22px;
+  }
+
+  .reserva-card-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .reserva-datos {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+}
